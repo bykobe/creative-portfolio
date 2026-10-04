@@ -1,0 +1,64 @@
+@media (min-width: 1280px) {
+    .aboutWrapper {
+        height: calc(90vh + 10rem);
+        max-height: 100vh;
+        width: 100%;
+        padding: 0 var(--spacing-sm);
+
+        .aboutBody {
+            height: 100%;
+            width: 100%;
+            padding: var(--spacing-md) 0;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: var(--spacing-sm);
+            overflow: hidden;
+
+            .aboutTitle {
+                color: var(--blue);
+                grid-column: 1 / span 5;
+                grid-row: 1 / span 3;
+            }
+
+            .aboutContent {
+                grid-column: 7 / span 6;
+                grid-row: 4 / span 3;
+                display: flex;
+                flex-direction: column;
+                gap: var(--spacing-sm);
+
+                .aboutDesc {
+                    text-wrap: pretty;
+                    max-width: 100%;
+
+                }
+
+                .aboutBtn {
+                  width: fit-content;
+                  background-color: transparent;
+                  display: flex;
+                    justify-content: start;
+                    align-items: start;
+                    padding: 0;
+                    color: var(--blue);
+                  font-size: var(--paragraph-3);
+                  text-decoration: underline dotted 2px var(--blue);
+
+                  /* Opt out of .btn's dashed hover outline */
+                  &::before,
+                  &::after {
+                      content: none;
+                  }
+
+                  &:hover {
+                      color: var(--sky-blue);
+                      text-decoration: underline dotted 2px var(--sky-blue);
+                  }
+
+                }
+
+            }
+        }
+    }
+}

@@ -1,0 +1,139 @@
+.btn {
+    /* Dashed hover edge. Both parts are variables so variants can retune the
+       edge without re-declaring the pseudo-elements:
+         --btn-edge-width  em-based, so it scales with the button's type size
+         --btn-edge-color  currentColor, so the edge always matches the text */
+    --btn-edge-width: clamp(2px, 0.055em, 7px);
+    --btn-edge-color: currentColor;
+
+    background-color: var(--cyan);
+    color: var(--black);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-family: var(--bricolage-font);
+    font-size: var(--heading-2);
+    font-weight: 600;
+    border: none;
+    border-radius: 4px;
+    text-align: center;
+    position: relative;
+    transition: background-color 0.3s ease;
+}
+
+.btn::before,
+.btn::after {
+    content: '';
+    position: absolute;
+    border-style: dashed;
+    border-width: var(--btn-edge-width);
+    border-color: var(--btn-edge-color);
+    /* Tracks whatever radius the button itself has (.btn = 4px,
+       .projectsBtn = 42px, etc.) so the dashed outline always matches. */
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    inset: 0px 0px 0px 0px;
+}
+
+.btn:hover::before,
+.btn:hover::after {
+    opacity: 1;
+}
+
+
+/* -- NOISE STYLING -- */
+
+.noise-overlay {
+  position: fixed;
+  width: 200%;
+  height: 200vh;
+  pointer-events: none;
+  inset: -50% 0% 0% -50%;
+  z-index: 9999;
+
+  /* Blend mode controls how the grain interacts with dark/light themes */
+  mix-blend-mode: multiply;
+  opacity: 1;
+
+  animation: noiseJitter 0.3s steps(6) infinite;
+  will-change: transform;
+}
+
+@keyframes noiseJitter {
+  0%   { transform: translate(0, 0); }
+  17%  { transform: translate(-5%, -10%); }
+  33%  { transform: translate(3%, -15%); }
+  50%  { transform: translate(12%, 9%); }
+  67%  { transform: translate(9%, 4%); }
+  83%  { transform: translate(-1%, 7%); }
+}
+
+
+.text_wrapper {
+    height: max-content;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(12px, 2.5vw, 32px);
+
+    .tw_top {
+        display: flex;
+        /* Set an explicit gap between .text_lets and .text_work */
+        gap: clamp(24px, 4vw, 64px);
+        width: 100%;
+
+        .text_lets,
+        .text_work {
+            display: flex;
+            align-items: center;
+            gap: clamp(2px, 0.4vw, 6px);
+            height: clamp(60px, 12vw, 160px);
+
+            & > svg {
+                height: 100%;
+                width: auto;
+                flex-shrink: 0;
+            }
+        }
+
+        .text_lets {
+            position: relative;
+
+            .asterisk_container {
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+
+                & svg {
+                    grid-column: 3 / span 1;
+                    width: clamp(35px, 8vw, 110px);
+                    height: auto;
+                    transform: translate(55%, -45%);
+                    stroke-width: 5;
+                    pointer-events: auto;
+                }
+            }
+        }
+    }
+
+    .tw_bottom {
+        width: 100%;
+
+        .text_together {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: clamp(2px, 0.4vw, 6px);
+            height: clamp(60px, 12vw, 160px);
+
+            & > svg {
+                height: 100%;
+                width: auto;
+                flex-shrink: 0;
+            }
+        }
+    }
+}

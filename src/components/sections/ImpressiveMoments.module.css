@@ -1,0 +1,79 @@
+@media(min-width: 1280px) {
+    .im_wrapper {
+        height: calc(50vh + 10rem);
+        max-height: 100vh;
+        width: 100%;
+        padding: 0 var(--spacing-sm);
+
+        .im_body {
+            height: 100%;
+            width: 100%;
+            padding: var(--spacing-md) 0;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: var(--spacing-sm);
+            overflow: hidden;
+
+            .im_content {
+                grid-column: 1 / span 12;
+                grid-row: 3 / span 3;
+                display: grid;
+                grid-template-columns: repeat(12, 1fr);
+                flex-direction: column;
+                gap: var(--spacing-sm);
+
+                .im_caption {
+                    grid-column: 1 / span 3;
+                }
+
+                .im_key {
+                    grid-column: 5 / span 1;
+                }
+
+
+                .im_desc_wrapper {
+                    grid-column: 7 / span 6;
+                    text-wrap: pretty;
+                    max-width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    gap: var(--spacing-sm);
+
+                    .im_desc {
+                        width: 100%;
+                    }
+
+
+                    .im_btn {
+                      width: fit-content;
+                      background-color: transparent;
+                      display: flex;
+                        justify-content: start;
+                        align-items: start;
+                        padding: 0;
+                        color: var(--blue);
+                      font-size: var(--paragraph-3);
+                      text-decoration: underline dotted 2px var(--blue);
+
+                      /* Opt out of .btn's dashed hover outline */
+                      &::before,
+                      &::after {
+                          content: none;
+                      }
+
+                      &:hover {
+                          color: var(--sky-blue);
+                          text-decoration: underline dotted 2px var(--sky-blue);
+                      }
+
+                    }
+                }
+
+
+
+
+            }
+        }
+    }
+}

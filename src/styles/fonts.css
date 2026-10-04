@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'Chunko';
+  src: url('/fonts/Chunko.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  src: url('/fonts/BricolageGrotesque.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Archivo Narrow';
+  src: url('/fonts/ArchivoNarrow.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+    font-family: 'Lisu Bosa';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Lisu Bosa Regular'), url('/fonts/LisuBosa-Regular.woff') format('woff');
+}

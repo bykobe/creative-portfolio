@@ -1,0 +1,251 @@
+.header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: var(--spacing-sm) var(--spacing-sm) 0 0;
+
+    .headerNav {
+        height: fit-content;
+        width: fit-content;
+        overflow: hidden;
+        position: relative;
+        margin-left: auto;
+        z-index: 100;
+
+        .menuBtn {
+            height: fit-content;
+            width: fit-content;
+            padding: calc(var(--spacing-sm) - 0.9rem) calc(var(--spacing-sm) - 0.5rem);
+            font-size: var(--paragraph-1);
+            border-radius: 12px;
+            background-color: var(--lime);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+
+        .menuBtn:hover {
+            background-color: var(--grey);
+        }
+
+        .menuBtn::before,
+        .menuBtn::after {
+            content: '';
+            position: absolute;
+            border: 3px dashed var(--black);
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .menuBtn::before {
+            inset: 0px 0px 0px 0px;
+        }
+
+        .menuBtn::after {
+            inset: 0px 0px 0px 0px;
+        }
+
+        .menuBtn:hover::before,
+        .menuBtn:hover::after {
+            opacity: 1;
+        }
+
+    }
+
+    .navMenuWrapper {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 104.867px;
+        height: 47px;
+        border-radius: 12px;
+        pointer-events: none;
+        transition: all 0.4s cubic-bezier(.69,0,.29,1);
+        pointer-events: none;
+
+        &.open {
+            top: 0;
+            right: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: auto;
+        }
+
+
+        .navMenu {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            background-color: var(--green);
+            padding: var(--spacing-sm);
+            display: flex;
+            flex-direction: column;
+            justify-content: end;
+            z-index: 99;
+            overflow: hidden;
+
+            .navLinksWrapper {
+                width: 100%;
+                max-width: 850px;
+                display: flex;
+                flex-direction: column;
+                gap: var(--spacing-sm);
+                overflow: hidden;
+
+                .navLinkItem {
+                    padding: 5px 0;
+
+                    .navLink {
+
+                        .linkContent {
+                            font-size: calc(clamp(5rem + 4.2vw, 2.7rem + 9.8vw, 12.5rem) - 2rem);
+                            font-family: var(--chunko-font);
+                            color: var(--white);
+                            display: flex;
+                            gap: calc(var(--spacing-md) + 10px );
+
+                            & span {
+                                line-height: 0.85;
+                                margin: 0;
+                                padding: 0;
+                                text-box-trim: trim-both;
+                                text-box-edge: cap alphabetic;
+                                vertical-align: text-bottom;
+                                text-align: right;
+                            }
+
+                            & .linkIdx {
+                                max-width: 100px;
+                                aspect-ratio: 1/1;
+                                width: 100%;
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+    .navMenuWrapper .open {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+}
+
+@media (min-width: 1200px) and (max-width: 1279px) {
+    .navMenu {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: var(--green);
+        padding: var(--spacing-sm);
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+        z-index: 99;
+        overflow: hidden;
+
+        .navLinksWrapper {
+            width: 100%;
+            max-width: 850px;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            overflow: hidden;
+
+            .navLinkItem {
+                padding: 5px 0;
+
+                .navLink {
+
+                    .linkContent {
+                        font-size: calc(clamp(5rem + 4.2vw, 2.7rem + 9.8vw, 12.5rem) - 2rem);
+                        font-family: var(--chunko-font);
+                        color: var(--white);
+                        display: flex;
+                        gap: calc(var(--spacing-md) + 10px );
+
+                        & span {
+                            line-height: 0.85;
+                            margin: 0;
+                            padding: 0;
+                            text-box-trim: trim-both;
+                            text-box-edge: cap alphabetic;
+                            vertical-align: text-bottom;
+                        }
+
+                        & .linkIdx {
+                            max-width: 100px;
+                            aspect-ratio: 1/1;
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 800px) and (max-width: 1199px) {
+    .navMenu {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: var(--green);
+        padding: var(--spacing-sm);
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+        z-index: 99;
+        overflow: hidden;
+
+        .navLinksWrapper {
+            width: 100%;
+            max-width: 850px;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            overflow: hidden;
+
+            .navLinkItem {
+                padding: 5px 0;
+
+                .navLink {
+
+                    .linkContent {
+                        font-size: calc(clamp(5rem + 4.2vw, 2.7rem + 9.8vw, 12.5rem) - 2rem);
+                        font-family: var(--chunko-font);
+                        color: var(--white);
+                        display: flex;
+                        gap: calc(var(--spacing-md) + 10px );
+
+                        & span {
+                            line-height: 0.85;
+                            margin: 0;
+                            padding: 0;
+                            text-box-trim: trim-both;
+                            text-box-edge: cap alphabetic;
+                            vertical-align: text-bottom;
+                        }
+
+                        & .linkIdx {
+                            max-width: 100px;
+                            aspect-ratio: 1/1;
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
