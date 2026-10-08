@@ -11,7 +11,7 @@ export default function Projects() {
 
         <div className={styles.cs_hero}>
           <div className={styles.cs_hero_title}>
-            <h1 className="display">Portfolio</h1>
+            <h1 className="heading1">Portfolio</h1>
             <sup className={`heading2`}>05</sup>
           </div>
         </div>

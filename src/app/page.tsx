@@ -5,6 +5,8 @@ import Spotlight from "@/components/sections/Spotlight";
 import About from "@/components/sections/About";
 import CaseStudies from "@/components/sections/Projects";
 import ImpressiveMoments from "@/components/sections/ImpressiveMoments";
+import Inspo from "@/components/sections/Inspo";
+import CallToAction from "@/components/sections/CallToAction";
 
 export default function Home() {
   return (
@@ -15,6 +17,8 @@ export default function Home() {
         <About />
         <CaseStudies />
         <ImpressiveMoments />
+        <Inspo />
+        <CallToAction />
       </main>
     </div>
   );

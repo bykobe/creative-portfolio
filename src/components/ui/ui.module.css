@@ -44,30 +44,32 @@
 /* -- NOISE STYLING -- */
 
 .noise-overlay {
-  position: fixed;
-  width: 200%;
-  height: 200vh;
-  pointer-events: none;
-  inset: -50% 0% 0% -50%;
-  z-index: 9999;
+    position: fixed;
+    width: 200%;
+    height: 200vh;
+    pointer-events: none;
+    inset: -50% 0% 0% -50%;
+    z-index: 9999;
 
-  /* Blend mode controls how the grain interacts with dark/light themes */
-  mix-blend-mode: multiply;
-  opacity: 1;
+    /* Blend mode controls how the grain interacts with dark/light themes */
+    mix-blend-mode: multiply;
+    opacity: 1;
 
-  animation: noiseJitter 0.3s steps(6) infinite;
-  will-change: transform;
+    animation: noiseJitter 0.3s steps(6) infinite;
+    will-change: transform;
 }
 
 @keyframes noiseJitter {
-  0%   { transform: translate(0, 0); }
-  17%  { transform: translate(-5%, -10%); }
-  33%  { transform: translate(3%, -15%); }
-  50%  { transform: translate(12%, 9%); }
-  67%  { transform: translate(9%, 4%); }
-  83%  { transform: translate(-1%, 7%); }
+    0%   { transform: translate(0, 0); }
+    17%  { transform: translate(-5%, -10%); }
+    33%  { transform: translate(3%, -15%); }
+    50%  { transform: translate(12%, 9%); }
+    67%  { transform: translate(9%, 4%); }
+    83%  { transform: translate(-1%, 7%); }
 }
 
+
+/* -- CTA SECTION STYLING -- */
 
 .text_wrapper {
     height: max-content;
@@ -78,7 +80,8 @@
 
     .tw_top {
         display: flex;
-        /* Set an explicit gap between .text_lets and .text_work */
+        justify-content: space-between;
+        align-items: center;
         gap: clamp(24px, 4vw, 64px);
         width: 100%;
 
@@ -110,9 +113,11 @@
                     grid-column: 3 / span 1;
                     width: clamp(35px, 8vw, 110px);
                     height: auto;
-                    transform: translate(55%, -45%);
+                    transform-origin: center center;
                     stroke-width: 5;
                     pointer-events: auto;
+                    animation: windmillSpin 2s linear infinite;
+                    will-change: transform;
                 }
             }
         }
@@ -135,5 +140,15 @@
                 flex-shrink: 0;
             }
         }
+    }
+}
+
+/* On-axis continuous rotation animation for the asterisk */
+@keyframes windmillSpin {
+    from {
+        transform: translate(55%, -45%) rotate(0deg);
+    }
+    to {
+        transform: translate(55%, -45%) rotate(360deg);
     }
 }

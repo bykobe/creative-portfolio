@@ -12,7 +12,12 @@ export default function About() {
             I believe in design with fingerprints—wonky edges, saturated chaos, and unexpected texture.
             My world is built with layered type, tangled color palettes, and layouts that like to interrupt themselves.
           </p>
-          <ButtonLink href="/about-me" className={styles.aboutBtn}>
+          <ButtonLink
+            href="/resume.pdf"
+            download
+            prefetch={false}
+            className={styles.aboutBtn}
+          >
             Get my Resume
           </ButtonLink>
         </div>

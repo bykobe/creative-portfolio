@@ -1,4 +1,4 @@
-@import url('./fonts.css');
+/* fonts.css is already imported by globals.css */
 
 .page {
   --background: #efefef;
@@ -10,7 +10,10 @@
   align-items: center;
   justify-content: start;
   font-family: 'Archivo Narrow', sans-serif;
-  background-color: var(--background);
+  /* --page-bg is left undefined here so it can be inherited from <html>,
+     where ScrollBackground toggles it. */
+  background-color: var(--page-bg, var(--background));
+  transition: background-color 600ms ease;
 }
 
 .main {

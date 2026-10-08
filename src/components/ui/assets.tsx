@@ -7,11 +7,25 @@ const wonky4 = "/images/wonky4.jpg";
 const wonky5 = "/images/wonky5.jpg";
 const wonky6 = "/images/wonky6.jpg";
 
-const juiced_1 = "/images/juiced-branding1.png";
-const cresta_1 = "/images/cresta1.jpeg";
-const phillys_1 = "/images/phillys-3.jpg";
-const stayr_1 = "/images/stayr1.jpg"
-const kamanga_1 = "/images/kamanga3.jpg"
+const inspo1 = "/images/inspo1.png";
+const inspo2 = "/images/inspo2.png";
+const inspo3 = "/images/inspo3.png";
+const inspo4 = "/images/inspo4.png";
+
+const juiced_1 = "/images/juiced-branding1.webp";
+const cresta_1 = "/images/cresta1.webp";
+const phillys_1 = "/images/phillys-3.webp";
+const stayr_1 = "/images/stayr1.jpg";
+const kamanga_1 = "/images/kamanga3.jpg";
+
+
+const psychodrama = "/images/psychodrama.jpg";
+const churchill_downs = "/images/churchill-downs.jpg";
+const biking = "/images/biking.jpg";
+const star67 = "/images/star-67.jpg";
+const before_i_blow = "/images/before-i-blow.jpg";
+const amerikan_badass = "/images/amerikan-badass.jpg";
+
 
 const E_GLYPH = () => {
   return (
@@ -103,40 +117,143 @@ const ASTERISK = () => {
 
 const case_studies = [
   {
-    img: juiced_1 ,
+    img: juiced_1,
     title: "JUICED",
     desc: "A bold identity and packaging system for a coconut water brand that refuses to sit still.",
     link: "",
     alt: "JUICED Case Study Banner",
   },
   {
-    img: cresta_1 ,
+    img: cresta_1,
     title: "CRESTA",
     desc: "A kinetic rebrand built around sharp type, hard edges, and a palette that cuts.",
     link: "",
     alt: "",
   },
   {
-    img: stayr_1 ,
+    img: stayr_1,
     title: "STAYR Inc.",
     desc: "A banner system for a brand that had to land loud in a very short scroll.",
     link: "",
     alt: "",
   },
   {
-    img: phillys_1 ,
+    img: phillys_1,
     title: "PHILLY'S",
     desc: "Poster work with layered type and enough saturated chaos to stop a scroll.",
     link: "",
     alt: "",
   },
-   {
-    img: kamanga_1 ,
+  {
+    img: kamanga_1,
     title: "Kamanga Studios",
     desc: "Warm, textured identity work for a studio that builds worlds worth getting lost in.",
     link: "",
     alt: "",
   },
+];
+
+const contact = [
+  {
+    name: "Instagram",
+    link: "",
+  },
+  {
+    name: "LinkedIn",
+    link: "",
+  },
+  {
+    name: "Glassdoor",
+    link: "",
+  },
+  {
+    name: "OkayDev",
+    link: "",
+  },
+  {
+    name: "X (Formerly Twitter)",
+    link: "",
+  },
+];
+
+const navigation = [
+  {
+    name: "Home",
+    link: "/",
+  },
+  {
+    name: "My Journey",
+    link: "/my-journey",
+  },
+  {
+    name: "Projects",
+    link: "/case-studies",
+  },
+  {
+    name: "My Resume",
+    link: "resume.pdf",
+  },
+];
+
+const experience: { studio: string, role: string, years: string }[] = [
+  {
+    studio: "GCTU (Internship)",
+    role: "Intern (Office)",
+    years: "Sept 2026–Nov 2026",
+  },
+  {
+    studio: "STAYR Inc",
+    role: "Cofounder & Frontend Lead",
+    years: "April 2026–Present",
+  },
+  {
+    studio: "ARCHIVE STUDIOS",
+    role: "Cofounder & Frontend Lead",
+    years: "May 2025–Present",
+  },
+  {
+    studio: "Upwork (Freelance)",
+    role: "Frontend Developer",
+    years: "Jan 2025–May 2025",
+  },
+  {
+    studio: "Go2Cod (Internship)",
+    role: "Intern (Remote)",
+    years: "Nov 2024–Dec 2024",
+  },
+];
+
+const music: { img: string, alt: string, audio: string }[] = [
+  {
+    img: biking,
+    alt: "",
+    audio: ""
+  },
+  {
+    img: star67,
+    alt: "",
+    audio: ""
+  },
+  {
+    img: before_i_blow,
+    alt: "",
+    audio: ""
+  },
+  {
+    img: churchill_downs,
+    alt: "",
+    audio: ""
+  },
+  {
+    img: amerikan_badass,
+    alt: "",
+    audio: ""
+  },
+  {
+    img: psychodrama,
+    alt: "",
+    audio: ""
+  },
 ]
 
-export {kobe, case_studies, wonky1, wonky2, wonky3, wonky4, wonky5, wonky6,ASTERISK, E_GLYPH, G_GLYPH, H_GLYPH, K_GLYPH, L_GLYPH, O_GLYPH, R_GLYPH, S_GLYPH, T_GLYPH, W_GLYPH}
+export {music, experience,navigation, kobe, case_studies, wonky1, wonky2, wonky3, wonky4, wonky5, wonky6,ASTERISK, E_GLYPH, G_GLYPH, H_GLYPH, K_GLYPH, L_GLYPH, O_GLYPH, R_GLYPH, S_GLYPH, T_GLYPH, W_GLYPH, inspo1, inspo2, inspo3, inspo4, contact}

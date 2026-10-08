@@ -1,15 +1,16 @@
-import { style } from "motion/react-m";
 import ButtonLink from "../ui/ButtonLink";
+import ScrollBackground from "../ui/ScrollBackground";
 
 import styles from "./ImpressiveMoments.module.css";
 
 export default function ImpressiveMoments() {
   return (
-    <section className={styles.im_wrapper}>
+    <section className={styles.im_wrapper} id="impressive-moments">
+      <ScrollBackground targetId="impressive-moments" at={0.4} />
       <div className={styles.im_body}>
         <div className={styles.im_content}>
-          <span className={`paragraph3 ${styles.im_caption}`}>Mildly Impressive Facts</span>
-          <span className={`paragraph3 ${styles.im_key}`}>(01)</span>
+          <span className={`paragraph4 ${styles.im_caption}`}>Mildly Impressive Facts</span>
+          <span style={{fontStyle: "italic"}} className={`paragraph4 ${styles.im_key}`}>(01)</span>
 
           <div className={styles.im_desc_wrapper}>
             <p className={`paragraph1 ${styles.im_desc}`}>

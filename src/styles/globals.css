@@ -23,6 +23,7 @@
   --white: #e9e9e9;
   --swart: #000000;
   --grey: #d9d9d9;
+  --red: #FF0000;
 
 
   /* --- SPACING --- */
@@ -57,6 +58,19 @@ body {
   cursor: url(/svg/pointer-cursor.cur), auto;
 }
 
+/* Scroll-triggered page background.
+   <html data-bg-active="true"> is set by ScrollBackground when a watched
+   section's top edge crosses 80% of the viewport height.
+
+   --foreground is the root of all inherited text colour (body sets
+   `color: var(--foreground)`), so overriding it here re-colours every
+   element that has NOT set its own `color`. Anything with an explicit
+   `color:` in its own rule keeps it, which is what we want. */
+html[data-bg-active="true"] {
+  --page-bg: var(--black);
+  --foreground: var(--white);
+}
+
 
 body {
   min-height: 100%;
@@ -67,6 +81,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: color 600ms ease;
 }
 
 * {
@@ -112,6 +127,14 @@ svg {
     text-box-trim: trim-both;
     text-box-edge: cap alphabetic;
     vertical-align: baseline;
+}
+
+.label {
+    font-family: var(--archivo-narrow-font);
+    font-weight: 700;
+    font-size: 14px ;
+    line-height: 120%;
+    letter-spacing: 6%;
 }
 
 .heading1 {

@@ -1,0 +1,48 @@
+@media(min-width: 1280px) {
+    .cta_wrapper {
+        height: calc(70vh + 15rem);
+        position: relative;
+        width: 100%;
+        padding: 0;
+        container-type: size;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+
+        .cta_bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100cqh;
+            height: 100cqw;
+            transform: translate(-50%, -50%) rotate(90deg);
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .cta_link {
+           width: 100%;
+           height: 100%;
+           align-items: center;
+           justify-content: center;
+           display: flex;
+           color: var(--blue);
+           text-decoration: underline dotted 8px var(--blue);
+           font-size: var(--heading-2);
+           background: none;
+           cursor: url('/svg/click_resized.svg') 62 64, url('/svg/click-cursor.cur'), auto;
+
+
+           &::before,
+           &::after {
+               content: none;
+           }
+
+           &:hover {
+               border: none;
+               color: var( --cyan, --pink);
+           }
+        }
+    }
+}

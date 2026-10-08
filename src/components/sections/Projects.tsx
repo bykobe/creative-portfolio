@@ -15,7 +15,6 @@ export default function Projects() {
                 alt={alt || title}
                 fill
                 sizes="(min-width: 1280px) 50vw, 100vw"
-                priority={idx === 0}
               />
             </div>
             <div className={styles.pi_cnt_wrapper}>

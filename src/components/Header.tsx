@@ -5,7 +5,7 @@ import styles from "./components.module.css"
 import { useEffect, useRef, useState } from "react";
 import type { RefObject } from "react";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 
 export default function Header() {
 
@@ -58,12 +58,17 @@ const NavMenu = ({ ref, isOpen }: NavMenuProps) => {
       <motion.div initial={{scale: 0}} animate={{scale: 1}} exit={{scale: 0}} className={`${styles.navMenuWrapper} ${isOpen ? styles.open : ''}`} ref={ref}>
         <div className={styles.navMenu}>
           <div className={styles.navLinksWrapper}>
-            {NavLinks.map(({idx, title, link}, i) => {
+            {NavLinks.map(({idx, title, link, download}, i) => {
               return (
                 <div key={i} className={styles.navLinkItem}>
-                  <a href={link} target="_self" className={styles.navLink}>
+                  <a
+                    href={link}
+                    target="_self"
+                    className={styles.navLink}
+                    {...(download ? { download } : {})}
+                  >
                     <div className={styles.linkContent}>
-                      <span className={styles.linkIdx}>{ idx}</span>
+                      <span className={styles.linkIdx}>0{ idx}</span>
                     <span>
                       {title}
                     </span>
@@ -82,7 +87,8 @@ type NavLinksTypes = {
   idx: number,
   title: string,
   link: string,
-
+  /** When set, the browser downloads `link` instead of navigating to it. */
+  download?: string,
 }
 
 const NavLinks:NavLinksTypes[]  = [
@@ -93,7 +99,7 @@ const NavLinks:NavLinksTypes[]  = [
   },
   {
     idx: 2 ,
-    title: "About" ,
+    title: "My Journey" ,
     link: "/my-journey",
   },
   {
@@ -103,6 +109,7 @@ const NavLinks:NavLinksTypes[]  = [
   },  {
     idx: 4 ,
     title: "Resume" ,
-    link: "/contact",
+    link: "/resume.pdf",
+    download: "Kobe-Tio-Resume.pdf",
   }
 ]
