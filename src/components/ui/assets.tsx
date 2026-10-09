@@ -191,7 +191,7 @@ const navigation = [
   },
   {
     name: "My Resume",
-    link: "resume.pdf",
+    link: "/docs/kobe-tio-resume.pdf",
   },
 ];
 

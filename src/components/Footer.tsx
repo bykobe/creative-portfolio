@@ -1,9 +1,16 @@
+"use client";
+
+import { useSound } from "./hooks/useSound";
+
 import Link from "next/link"
 import styles from "./components.module.css"
 import { ASTERISK, contact, navigation } from "./ui/assets"
 import FooterMark from "./ui/svgs/FooterMark"
 
 export default function Footer() {
+
+  const click = useSound('/audio/mouse-clicks.mp3');
+
   return (
     <footer className={styles.footer}>
       <div className={styles.footer_body}>
@@ -16,7 +23,7 @@ export default function Footer() {
               {contact.map(({name, link}, idx) => {
                 return (
                   <li className={styles.contact_item} key={idx}>
-                    <Link href={link}>
+                    <Link href={link} onClick={click}>
                       <span className="paragraph1">{name}</span>
                     </Link>
                   </li>
@@ -33,7 +40,7 @@ export default function Footer() {
               {navigation.map(({name, link}, idx) => {
                 return (
                   <li className={styles.nav_item} key={idx}>
-                    <Link href={link}>
+                    <Link href={link} onClick={click}>
                       <span className="paragraph1">{name}</span>
                     </Link>
                   </li>

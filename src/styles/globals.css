@@ -1,8 +1,11 @@
 @import url('./fonts.css');
 
 :root {
-  --background: #efefef;
+  --background: #d1d1c7;
   --foreground: #171717;
+
+  --transition-s-1: #4200F2;
+  --transition-s-2: var(--lime);
 
   --chunko-font: 'Chunko', sans-serif;
   --bricolage-font: 'Bricolage Grotesque', sans-serif;

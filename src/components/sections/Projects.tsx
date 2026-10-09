@@ -1,14 +1,19 @@
+"use client";
+
 import Image from "next/image";
 import { case_studies } from "../ui/assets";
 import styles from "./Projects.module.css";
 import ButtonLink from "../ui/ButtonLink";
+import { useSound } from "../hooks/useSound";
 
 export default function Projects() {
+
+  const click = useSound('/audio/mouse-clicks.mp3')
   return (
     <section className={styles.projectsWrapper}>
       <div className={styles.projectsBody}>
         {case_studies.slice(0, 4).map(({ img, title, alt }, idx) => (
-          <article className={styles.projectItem} key={title}>
+          <article onClick={click} className={styles.projectItem} key={title}>
             <div className={styles.pi_img_wrapper}>
               <Image
                 src={img}
@@ -25,7 +30,9 @@ export default function Projects() {
         ))}
 
         <div className={styles.projectsBtnWrapper}>
-          <ButtonLink className={styles.projectsBtn} href={""}>View all projects</ButtonLink>
+          <ButtonLink className={styles.projectsBtn} href={"/case-studies"} onClick={click}>
+            View all projects
+          </ButtonLink>
         </div>
       </div>
 

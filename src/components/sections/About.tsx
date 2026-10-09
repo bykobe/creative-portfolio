@@ -1,7 +1,13 @@
+"use client";
+
+import { useSound } from "../hooks/useSound";
 import ButtonLink from "../ui/ButtonLink";
 import styles from "./About.module.css";
 
 export default function About() {
+
+  const click = useSound('/audio/mouse-clicks.mp3');
+
   return (
     <section className={styles.aboutWrapper}>
       <div className={styles.aboutBody}>
@@ -17,7 +23,8 @@ export default function About() {
             download
             prefetch={false}
             className={styles.aboutBtn}
-          >
+            onClick={click}
+        >
             Get my Resume
           </ButtonLink>
         </div>

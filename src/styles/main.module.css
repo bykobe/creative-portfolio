@@ -1,8 +1,8 @@
 /* fonts.css is already imported by globals.css */
 
 .page {
-  --background: #efefef;
-  --foreground: #010101;
+  --background: #d1d1c7;
+  --foreground: var(--swart);
 
   display: flex;
   flex: 1;

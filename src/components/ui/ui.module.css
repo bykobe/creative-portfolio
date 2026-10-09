@@ -43,30 +43,17 @@
 
 /* -- NOISE STYLING -- */
 
-.noise-overlay {
+.noise {
     position: fixed;
-    width: 200%;
-    height: 200vh;
-    pointer-events: none;
-    inset: -50% 0% 0% -50%;
+    inset: 0;
+    height: 120vh;
+    width: 120vw;
+    opacity: 0.065; /* Adjust opacity here */
     z-index: 9999;
-
-    /* Blend mode controls how the grain interacts with dark/light themes */
-    mix-blend-mode: multiply;
-    opacity: 1;
-
-    animation: noiseJitter 0.3s steps(6) infinite;
-    will-change: transform;
-}
-
-@keyframes noiseJitter {
-    0%   { transform: translate(0, 0); }
-    17%  { transform: translate(-5%, -10%); }
-    33%  { transform: translate(3%, -15%); }
-    50%  { transform: translate(12%, 9%); }
-    67%  { transform: translate(9%, 4%); }
-    83%  { transform: translate(-1%, 7%); }
-}
+    pointer-events: none;
+    user-select: none;
+    mix-blend-mode: difference;
+  }
 
 
 /* -- CTA SECTION STYLING -- */
