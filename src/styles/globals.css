@@ -7,6 +7,9 @@
   --transition-s-1: #4200F2;
   --transition-s-2: var(--lime);
 
+  --transition-s-1: var(--black);
+  --transition-s-2: var(--black);
+
   --chunko-font: 'Chunko', sans-serif;
   --bricolage-font: 'Bricolage Grotesque', sans-serif;
   --archivo-narrow-font: 'Archivo Narrow', sans-serif;
@@ -106,6 +109,10 @@ input[type="button"] {
 svg {
     width: 100%;
     height: auto;
+}
+
+img, svg, text, button {
+    z-index: 4;
 }
 
 /* --- PRE-DEFINED TYPOGRAPHY STYLES --- */

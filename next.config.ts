@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   devIndicators: false,
 
+  transpilePackages: ["three"],
+
   images: {
     // AVIF first, WebP fallback. Both are far smaller than the source PNG/JPEG.
     formats: ["image/avif", "image/webp"],

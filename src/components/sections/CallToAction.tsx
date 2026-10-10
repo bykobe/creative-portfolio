@@ -6,11 +6,16 @@ import { wonky3 } from "../ui/assets";
 
 export default function CallToAction() {
   return (
+    <>
     <section className={styles.cta_wrapper}>
-      <Image src={wonky3} width={1000} height={1000} alt="background"  className={styles.cta_bg} />
+      <Image src={wonky3} width={1000} height={1000} alt="background" className={styles.cta_bg} />
       <ButtonLink className={styles.cta_link} href="/">
         <CTA />
       </ButtonLink>
-    </section>
+      </section>
+      <div className={styles.cta_dsn_wrapper}>
+
+      </div>
+    </>
   );
 }

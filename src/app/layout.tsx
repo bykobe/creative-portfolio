@@ -19,11 +19,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         <NoiseModule />
         <SmoothScroll>
-          <Header />
+         {/*  <Header /> */}
           <TransitionProvider>
              {children}
           </TransitionProvider>
-          <Footer />
+         {/* <Footer /> */}
           <NoiseModule />
         </SmoothScroll>
       </body>

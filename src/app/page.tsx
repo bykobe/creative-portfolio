@@ -7,11 +7,15 @@ import CaseStudies from "@/components/sections/Projects";
 import ImpressiveMoments from "@/components/sections/ImpressiveMoments";
 import Inspo from "@/components/sections/Inspo";
 import CallToAction from "@/components/sections/CallToAction";
+import Scene from "@/components/Scene";
 
 export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
+           <Scene />
+        {/*
+
         <Hero />
         <Spotlight />
         <About />
@@ -19,6 +23,7 @@ export default function Home() {
         <ImpressiveMoments />
         <Inspo />
         <CallToAction />
+        */}
       </main>
     </div>
   );

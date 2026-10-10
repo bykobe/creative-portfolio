@@ -48,8 +48,8 @@
     inset: 0;
     height: 120vh;
     width: 120vw;
-    opacity: 0.065; /* Adjust opacity here */
-    z-index: 9999;
+    opacity: 0.085; /* Adjust opacity here */
+    z-index: 3;
     pointer-events: none;
     user-select: none;
     mix-blend-mode: difference;
