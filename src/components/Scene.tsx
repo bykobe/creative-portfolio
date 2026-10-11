@@ -4,11 +4,6 @@ import styles from "./components.module.css";
 import * as THREE from 'three';
 import { useEffect, useRef } from "react";
 import { GLTFLoader, OrbitControls } from "three/examples/jsm/Addons.js";
-// 💡 Import GSAP and ScrollTrigger
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function Scene() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -67,11 +62,9 @@ export default function Scene() {
     roomGroup.add(rightWall);
 
     // ==========================================
-    // 2. CAMERA & INITIAL ORBIT CONTROLS
+    // 2. CAMERA & CONTROLS SETUP
     // ==========================================
     const camera = new THREE.PerspectiveCamera(15, sizes.width / sizes.height, 0.1, 200);
-
-    // 💡 Image 1: Default view setting the camera angled up and off to the right
     camera.position.set(4, 5, 12);
 
     const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
@@ -88,9 +81,8 @@ export default function Scene() {
     controls.maxPolarAngle = Math.PI * 0.49;
     controls.minDistance = 1;
     controls.maxDistance = 60;
-
-    // Set controls to point at the center of where the model rests
     controls.target.set(0, 1.5, 0);
+    controls.enableZoom = false;
 
     // ==========================================
     // 3. LIGHTING
@@ -115,12 +107,35 @@ export default function Scene() {
     window.addEventListener('resize', handleResize);
 
     // ==========================================
-    // 4. MODEL LOADING & GSAP TIMELINE SETUP
+    // 4. SCROLL & CURVE PATH ENGINE
+    // ==========================================
+    let scrollProgress = 0; // 0 to 1
+    let targetYCenter = 1.5;
+    let isUserInteracting = false;
+    let dynamicCurve: THREE.CatmullRomCurve3 | null = null;
+
+    controls.addEventListener('start', () => { isUserInteracting = true; });
+    controls.addEventListener('end', () => { isUserInteracting = false; });
+
+    const handleWheel = (event: WheelEvent) => {
+      const delta = event.deltaY * 0.0008;
+      scrollProgress = Math.max(0, Math.min(1, scrollProgress + delta));
+
+      if (scrollProgress > 0.02) {
+        controls.enabled = false;
+      } else if (!isUserInteracting) {
+        controls.enabled = true;
+      }
+    };
+    window.addEventListener('wheel', handleWheel, { passive: true });
+
+    // ==========================================
+    // 5. MODEL LOADING
     // ==========================================
     let animatedModel: THREE.Group | null = null;
-
     const modelLoader = new GLTFLoader();
     const model = "/models/macintosh_classic_1991.glb";
+
     modelLoader.load(model, (glb) => {
       animatedModel = glb.scene;
 
@@ -134,60 +149,12 @@ export default function Scene() {
       const box = new THREE.Box3().setFromObject(animatedModel);
       const minY = box.min.y;
       animatedModel.position.y = -minY;
-
       scene.add(animatedModel);
 
-      // Get exact calculated center height of the screen mesh
       const center = new THREE.Vector3();
       box.getCenter(center);
-      const targetY = center.y; // Center point of the machine height
-
-      // Adjust controls target directly to the machine's middle center
-      controls.target.set(0, targetY, 0);
-
-      // 💡 Initialize GSAP Scroll Animation
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current, // Use the scroll wrapper element
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 1, // Smooth interpolation linked to scroll position
-          onUpdate: (self) => {
-            // Disable user input while scrolling actively to prevent physics code fighting
-            if (self.progress > 0.01 && self.progress < 0.99) {
-              controls.enabled = false;
-            } else {
-              controls.enabled = true;
-            }
-          },
-          onComplete: () => { controls.enabled = true; },
-          onInterrupt: () => { controls.enabled = true; }
-        }
-      });
-
-      // 💡 GSAP Animation Chain
-      tl.to(camera.position, {
-        // Image 2 Position: Move dead center front on X-axis, square up Y-axis height
-        x: 0,
-        y: targetY,
-        z: 8, // Bring camera closer square in front
-        duration: 2,
-        ease: "power2.inOut"
-      })
-      .to(controls.target, {
-        x: 0,
-        y: targetY,
-        z: -5,
-        duration: 2,
-        ease: "power2.inOut"
-      }, "<") // Start at same time as position movement
-      .to(camera.position, {
-        // Push deep into the monitor until screen elements fill layout viewport
-        z: 2.1, // Adjust this number slightly forward/backward depending on your GLB screen depth scale
-        duration: 2,
-        ease: "power1.in"
-      });
-
+      targetYCenter = center.y;
+      controls.target.set(0, targetYCenter, 0);
     },
     undefined,
     (error) => {
@@ -195,25 +162,62 @@ export default function Scene() {
     });
 
     // ==========================================
-    // 5. ANIMATION LOOP
+    // 6. ANIMATION LOOP WITH SPLINE CURVE
     // ==========================================
     let animationFrameId: number;
+    let lastScrollProgress = -1;
+
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
 
-      if (controls.target.y < 0) {
-        controls.target.y = 0;
+      if (!isUserInteracting) {
+        if (scrollProgress === 0 && controls.enabled) {
+          // Reset curve cache when user returns to top
+          dynamicCurve = null;
+          lastScrollProgress = 0;
+          controls.target.set(0, targetYCenter, 0);
+        } else {
+          // The first time scroll starts, build a custom CatmullRom curve
+          // starting dynamically from wherever the user's camera currently is!
+          if (!dynamicCurve || Math.abs(scrollProgress - lastScrollProgress) > 0.5 && scrollProgress < 0.05) {
+            const currentCamPos = camera.position.clone();
+            const frontFacePos = new THREE.Vector3(0, targetYCenter + 0.7 , 6); // Sweeps around to front
+            const screenZoomPos = new THREE.Vector3(0, targetYCenter + 1.5, 1); // Snaps into screen glass
+
+            dynamicCurve = new THREE.CatmullRomCurve3([
+              currentCamPos,
+              frontFacePos,
+              screenZoomPos
+            ]);
+          }
+
+          if (dynamicCurve) {
+            // Evaluate the exact 3D position along our smooth curve based on scroll progress
+            const targetCamPosition = dynamicCurve.getPoint(scrollProgress);
+
+            // Smoothly lerp camera position and look target
+            camera.position.lerp(targetCamPosition, 0.08);
+
+            const targetLookAt = new THREE.Vector3(0, targetYCenter, 0);
+            controls.target.lerp(targetLookAt, 0.08);
+          }
+        }
       }
 
-      controls.update();
+      if (controls.enabled) {
+        controls.update();
+      } else {
+        camera.lookAt(controls.target);
+      }
+
       renderer.render(scene, camera);
     };
     animate();
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('wheel', handleWheel);
       cancelAnimationFrame(animationFrameId);
-      ScrollTrigger.getAll().forEach(t => t.kill()); // Clean up scroll updates
       controls.dispose();
       renderer.dispose();
     };
@@ -221,11 +225,8 @@ export default function Scene() {
   }, []);
 
   return (
-    // 💡 Wrapper container controls page scroll limits height
-    <div className={styles.webGl_wrapper} ref={containerRef} style={{ height: "300vh", position: "relative" }}>
-      <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh" }}>
-        <canvas ref={canvasRef} className={styles.webGl}></canvas>
-      </div>
+    <div className={styles.webGl_wrapper} ref={containerRef} style={{ height: "100vh", width: "100vw", position: "fixed", overflow: "hidden" }}>
+      <canvas ref={canvasRef} className={styles.webGl}></canvas>
     </div>
   );
 }
