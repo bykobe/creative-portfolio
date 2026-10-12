@@ -17,14 +17,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
       <body>
-        <NoiseModule />
         <SmoothScroll>
-         {/*  <Header /> */}
+         <Header />
           <TransitionProvider>
              {children}
           </TransitionProvider>
-         {/* <Footer /> */}
-          <NoiseModule />
+         <Footer />
         </SmoothScroll>
       </body>
     </html>

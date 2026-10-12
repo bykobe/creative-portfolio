@@ -285,6 +285,7 @@
 
 .webGl_wrapper {
             z-index: 100000000;
+            cursor: url('/svg/pointer-cursor.cur') auto;
     .webGl {
         position: fixed;
         inset: 0;

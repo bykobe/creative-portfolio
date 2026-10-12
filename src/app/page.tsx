@@ -14,8 +14,6 @@ export default function Home() {
     <div className={styles.page}>
       <main className={styles.main}>
            <Scene />
-        {/*
-
         <Hero />
         <Spotlight />
         <About />
@@ -23,7 +21,7 @@ export default function Home() {
         <ImpressiveMoments />
         <Inspo />
         <CallToAction />
-        */}
+
       </main>
     </div>
   );
