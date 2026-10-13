@@ -147,10 +147,10 @@ export default function MyJourney() {
             </div>
 
             <div className={styles.about_cta}>
-              <Image fill src={wonky2} alt="" className={styles.about_cta_img} />
               <div className={styles.about_cta_title}>
                 <CTA />
               </div>
+              <Image fill src={wonky2} alt="" className={styles.about_cta_img} />
             </div>
         </div>
       </div>

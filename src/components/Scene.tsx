@@ -4,6 +4,7 @@ import styles from "./components.module.css";
 import * as THREE from 'three';
 import { useEffect, useRef } from "react";
 import { DRACOLoader, GLTFLoader, OrbitControls } from "three/examples/jsm/Addons.js";
+import { landingGate } from "@/providers/landing-gate";
 
 // ==========================================
 // SETTINGS
@@ -44,11 +45,21 @@ const FRONT_DISTANCE_FACTOR = 4;
 // Extra height on the orbit arc when the camera has to sweep round from behind the model
 const ARC_LIFT = 1.2;
 
-// Hand-off to the real page: how long the canvas takes to fade out, and how long the page must
-// sit at its very top before scrolling up brings the 3D scene back (so a flick that merely
-// reaches the top doesn't bounce you back in).
-const HANDOFF_FADE_MS = 600;
+// Hand-off to the real page: the transition (HeroTransition) starts when the glass covers this
+// fraction of the viewport (1 = edge to edge, 0.97 = nearly full). The camera carries on to the
+// very end of its path underneath it.
+const TRANSITION_COVERAGE = 0.97;
+
+// How long the landing page must sit at its very top before pulling up brings the 3D scene back
+// (so a flick that merely reaches the top doesn't bounce you back in), and where on the scroll
+// path the camera starts from again when it does.
 const REENTER_DWELL_MS = 350;
+const LEAVE_PROGRESS = 0.85;
+
+// After the hand-off, wheel events keep arriving for a moment (trackpad momentum, a fast spin).
+// They are swallowed until the wheel has been quiet this long, so the landing page doesn't open
+// already scrolled. The same goes for the first moments after the scene takes over again.
+const WHEEL_QUIET_MS = 120;
 
 // ==========================================
 // SCROLL PATH & SCREEN FRAMING (pure helpers)
@@ -199,6 +210,17 @@ function fitDistance(frame: ScreenFrame, view: { fov: number; aspect: number }) 
   const byHeight = frame.height / 2 / tanHalf;
   const byWidth = frame.width / 2 / (tanHalf * view.aspect);
   return Math.max(byHeight, byWidth) / SCREEN_FILL;
+}
+
+// How much of the viewport the glass covers from where the camera is now, measured along the
+// glass's own axis: 1 = it just fills the tighter dimension edge to edge, 0.5 = half of that.
+function glassCoverage(frame: ScreenFrame, camera: THREE.PerspectiveCamera) {
+  const p = camera.position, c = frame.center, n = frame.normal;
+  const distance = (p.x - c.x) * n.x + (p.y - c.y) * n.y + (p.z - c.z) * n.z;
+  if (distance <= 0) return 0;
+  const tanHalf = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+  const needed = Math.max(frame.height / 2 / tanHalf, frame.width / 2 / (tanHalf * camera.aspect));
+  return needed / distance;
 }
 
 // Camera path: [start] -> [mid-air orbit arc] -> [front center] -> [screen glass].
@@ -429,56 +451,106 @@ export default function Scene() {
     controls.addEventListener('end', () => { isUserInteracting = false; });
 
     // ---- Hand-off to the real page ----------------------------------------------------------
-    // The page sits underneath this fixed canvas. While the scene is showing, scrolling drives
-    // the camera and the page must not move; once the camera has settled on the glass, the canvas
-    // fades out and the page becomes live. Scrolling up from the very top of the page fades the
-    // scene back in and walks the camera back along its path.
+    // The landing page is display: none (see LandingGate) for as long as the scene shows, so the
+    // document has no height and there is nothing to scroll underneath the canvas. When the glass
+    // covers TRANSITION_COVERAGE of the viewport, the transition starts (landingGate.begin). Once
+    // it has fully covered the screen it calls landingGate.commit(): the canvas stops and the page
+    // appears. Pulling up from the top of the page runs the same thing in reverse.
     let pageActive = false;
     let renderPaused = false;
-    let pauseTimer: number | undefined;
     let atTopSince = 0; // when the page last came to rest at scrollY 0 (0 = it is not at the top)
 
+    // The page just gained or lost its height: let anything that measures it (Lenis,
+    // ScrollTrigger) re-measure. Nothing here touches the smooth-scroll library itself.
+    const resetPageScroll = () => { if (window.scrollY !== 0) window.scrollTo(0, 0); };
+    const remeasurePage = () => requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
+
+    let lastWheelAt = 0;     // time of the previous wheel event
+    let swallowing = false;  // ignoring a wheel gesture that began while the scene was showing
+
+    // Called by the gate while the transition fully covers the screen
     const enterPage = () => {
       const wrapper = containerRef.current;
-      if (!wrapper || pageActive) return;
+      if (!wrapper) return;
       pageActive = true;
-      if (window.scrollY !== 0) window.scrollTo(0, 0);
-      atTopSince = performance.now() - REENTER_DWELL_MS; // scrolling straight back up is allowed
-      wrapper.style.opacity = "0";
+      renderPaused = true;
+      wrapper.style.visibility = "hidden";
       wrapper.style.pointerEvents = "none";
       canvas.style.pointerEvents = "none"; // the stylesheet sets pointer-events: auto on the canvas itself
-      // stop rendering once it is invisible
-      pauseTimer = window.setTimeout(() => { renderPaused = true; }, HANDOFF_FADE_MS + 50);
+      resetPageScroll();
+      swallowing = true; // the gesture that got us here may still be going: it must not scroll the page
+      atTopSince = performance.now() - REENTER_DWELL_MS; // scrolling straight back up is allowed
+      remeasurePage();
     };
 
     const leavePage = () => {
       const wrapper = containerRef.current;
-      if (!wrapper || !pageActive) return;
+      if (!wrapper) return;
       pageActive = false;
       renderPaused = false;
-      window.clearTimeout(pauseTimer);
-      wrapper.style.opacity = "1";
+      wrapper.style.visibility = "";
       wrapper.style.pointerEvents = "";
       canvas.style.pointerEvents = "";
+      resetPageScroll();
+      remeasurePage();
     };
+
+    const unsubscribeGate = landingGate.on((event) => {
+      if (event.type !== "commit") return;
+      try {
+        if (event.direction === "enter") enterPage();
+        else leavePage();
+      } catch (error) {
+        console.error("[Scene] swapping scene and page failed:", error);
+      }
+    });
 
     const handlePageScroll = () => {
       atTopSince = window.scrollY <= 0 ? (atTopSince || performance.now()) : 0;
     };
     window.addEventListener('scroll', handlePageScroll, { passive: true });
 
+    // Only while a transition plays, or just after it (a gesture still in flight), are wheel events
+    // stopped before the page's smooth scroll sees them. Everything else is left alone.
     const handleWheel = (event: WheelEvent) => {
       if (event.ctrlKey) return; // browser zoom gesture
 
-      if (pageActive) {
-        // The real page is showing: scroll it normally, unless the user pulls up from its top
-        const atTop = window.scrollY <= 0 && atTopSince > 0 &&
-          performance.now() - atTopSince >= REENTER_DWELL_MS;
-        if (event.deltaY < 0 && atTop) leavePage();
-        else return;
+      const now = performance.now();
+      const quiet = now - lastWheelAt > WHEEL_QUIET_MS; // this event starts a new gesture
+      lastWheelAt = now;
+
+      // A transition is playing: nothing scrolls
+      if (landingGate.busy) {
+        event.stopImmediatePropagation();
+        event.preventDefault();
+        return;
       }
 
-      event.preventDefault(); // while the scene is showing, the page must not scroll underneath
+      if (pageActive) {
+        // A gesture that was still running when the page took over belongs to the scene
+        if (swallowing) {
+          if (!quiet) {
+            event.stopImmediatePropagation();
+            event.preventDefault();
+            return;
+          }
+          swallowing = false;
+        }
+        // The real page is showing: it scrolls normally, unless the user pulls up from its top
+        const atTop = window.scrollY <= 0 && atTopSince > 0 &&
+          now - atTopSince >= REENTER_DWELL_MS;
+        if (event.deltaY < 0 && atTop && quiet) {
+          event.stopImmediatePropagation();
+          event.preventDefault();
+          scrollProgress = Math.min(scrollProgress, LEAVE_PROGRESS); // the camera backs away from the glass
+          landingGate.begin("leave");
+        }
+        return; // otherwise not ours: the page (and its smooth scroll) handles it
+      }
+
+      // The scene is showing: the landing page is display: none, so the document has no height and
+      // there is nothing to scroll. The wheel only drives the camera.
+      event.preventDefault();
       const delta = event.deltaY * 0.0008;
       scrollProgress = Math.max(0, Math.min(1, scrollProgress + delta));
 
@@ -488,7 +560,7 @@ export default function Scene() {
         controls.enabled = false;
       }
     };
-    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('wheel', handleWheel, { passive: false, capture: true });
 
     // Scroll value -> curve parameter. It stays at 0 inside the free-orbit zone, so the
     // path begins where the zone ends and scrolling back down lands exactly on the start.
@@ -530,6 +602,7 @@ export default function Scene() {
     // ==========================================
     // 5. MODEL LOADING
     // ==========================================
+    let disposed = false;
     let animatedModel: THREE.Group | null = null;
     const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath(DRACO_DECODER_PATH);
@@ -576,7 +649,9 @@ export default function Scene() {
     },
     undefined,
     (error) => {
+      if (disposed) return; // the effect was torn down (React dev double-mount): not a real failure
       console.error("An error occurred loading the model:", error);
+      landingGate.skip(); // no scene to scroll through: just show the landing page
     });
 
     // Dev tool: click anywhere on the model and the console prints the mesh and material under
@@ -642,13 +717,16 @@ export default function Scene() {
           lookAtForProgress(t, pathStartTarget, modelCenter, screenFrame.center, targetLookAt);
           controls.target.lerp(targetLookAt, 0.08);
 
-          // Scrolled all the way in and settled on the glass: hand off to the real page.
+          // The glass nearly fills the viewport: start the transition. The camera carries on to
+          // the very end of the path underneath it; input is locked until it has finished.
           if (
             !pageActive &&
-            scrollProgress >= 1 &&
-            camera.position.distanceTo(cameraCurve.getPoint(1)) < screenFrame.width * 0.01
+            !landingGate.busy &&
+            scrollProgress >= 0.9 &&
+            glassCoverage(screenFrame, camera) >= TRANSITION_COVERAGE * SCREEN_FILL
           ) {
-            enterPage();
+            scrollProgress = 1;
+            landingGate.begin("enter");
           }
 
           // Back at the top and fully settled on the original view: land on it exactly,
@@ -678,11 +756,13 @@ export default function Scene() {
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('wheel', handleWheel, { capture: true });
       window.removeEventListener('scroll', handlePageScroll);
       renderer.domElement.removeEventListener('pointerdown', handlePointerDown);
       renderer.domElement.removeEventListener('pointerup', handlePointerUp);
-      window.clearTimeout(pauseTimer);
+      disposed = true;
+      unsubscribeGate();
+      landingGate.reset();
       cancelAnimationFrame(animationFrameId);
       controls.dispose();
       dracoLoader.dispose();
@@ -701,7 +781,6 @@ export default function Scene() {
         width: "100vw",
         position: "fixed",
         overflow: "hidden",
-        transition: `opacity ${HANDOFF_FADE_MS}ms ease`,
       }}
     >
       <canvas ref={canvasRef} className={styles.webGl}></canvas>

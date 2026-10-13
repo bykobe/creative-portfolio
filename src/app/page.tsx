@@ -8,20 +8,25 @@ import ImpressiveMoments from "@/components/sections/ImpressiveMoments";
 import Inspo from "@/components/sections/Inspo";
 import CallToAction from "@/components/sections/CallToAction";
 import Scene from "@/components/Scene";
+import LandingGate, { LandingGateStyles } from "@/components/LandingGate";
+import HeroTransition from "@/components/HeroTransition";
 
 export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-           <Scene />
-        <Hero />
-        <Spotlight />
-        <About />
-        <CaseStudies />
-        <ImpressiveMoments />
-        <Inspo />
-        <CallToAction />
-
+        <LandingGateStyles />
+        <Scene />
+        <HeroTransition />
+        <LandingGate>
+          <Hero />
+          <Spotlight />
+          <About />
+          <CaseStudies />
+          <ImpressiveMoments />
+          <Inspo />
+          <CallToAction />
+        </LandingGate>
       </main>
     </div>
   );

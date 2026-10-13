@@ -5,10 +5,7 @@
   --foreground: #171717;
 
   --transition-s-1: #4200F2;
-  --transition-s-2: var(--lime);
-
-  --transition-s-1: var(--black);
-  --transition-s-2: var(--black);
+  --transition-s-2: #4200f2;
 
   --chunko-font: 'Chunko', sans-serif;
   --bricolage-font: 'Bricolage Grotesque', sans-serif;
