@@ -13,13 +13,16 @@
         position: relative;
         margin-left: auto;
         z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: calc(var(--spacing-sm) - 0.8rem);
 
         .menuBtn {
             height: fit-content;
             width: fit-content;
             padding: calc(var(--spacing-sm) - 0.9rem) calc(var(--spacing-sm) - 0.5rem);
             font-size: var(--paragraph-1);
-            border-radius: 12px;
+            border-radius: 4px;
             background-color: var(--swart);
             color: var(--white);
             border: none;
@@ -37,8 +40,8 @@
         .menuBtn::after {
             content: '';
             position: absolute;
-            border: 3px dashed var(--black);
-            border-radius: 12px;
+            border: 4px dashed var(--black);
+            border-radius: 4px;
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: none;
@@ -281,6 +284,42 @@
             grid-row: 6 / span 3;
         }
     }
+}
+
+.musicToggle {
+    height: fit-content;
+    width: fit-content;
+    padding: calc(var(--spacing-sm) - 0.9rem) calc(var(--spacing-sm) - 0.5rem);
+    font-size: var(--paragraph-5);
+    border-radius: 4px;
+    background-color: var(--swart);
+    color: var(--white);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.3s ease;
+}
+
+.musicToggle:hover {
+    background-color: var(--green);
+    color: var(--black);
+}
+
+.musicToggle::before,
+.musicToggle::after {
+    content: '';
+    position: absolute;
+    border: 4px dashed var(--white);
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    inset: 0px 0px 0px 0px;
+}
+
+.musicToggle:hover::before,
+.musicToggle:hover::after {
+    opacity: 1;
 }
 
 .webGl_wrapper {

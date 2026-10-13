@@ -5,7 +5,10 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
 import NoiseModule from "@/components/ui/NoiseModule";
+import BackgroundMusic from "@/providers/background-music";
+import GlobalClickSound from "@/components/GlobalClickSound";
 import TransitionProvider from "@/providers/transition-provider";
+import Preloader from "@/components/preloader/Preloader";
 
 export const metadata: Metadata = {
   title: "Kobe Tio — Design Engineer ",
@@ -17,13 +20,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
       <body>
-        <SmoothScroll>
-         <Header />
-          <TransitionProvider>
-             {children}
-          </TransitionProvider>
-         <Footer />
-        </SmoothScroll>
+        <Preloader />
+        <NoiseModule />
+        <BackgroundMusic>
+          <GlobalClickSound />
+          <SmoothScroll>
+           <Header />
+            <TransitionProvider>
+               {children}
+            </TransitionProvider>
+           <Footer />
+          </SmoothScroll>
+        </BackgroundMusic>
       </body>
     </html>
   );

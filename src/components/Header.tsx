@@ -1,6 +1,7 @@
 "use client"
 
 import Button from "./ui/Button";
+import MusicToggle from "./ui/MusicToggle";
 import styles from "./components.module.css"
 import { useEffect, useRef, useState } from "react";
 import type { RefObject } from "react";
@@ -8,26 +9,19 @@ import type { RefObject } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
 
-import { useSound } from "./hooks/useSound";
-
 // Header component
 export default function Header() {
-
-
-  const click = useSound('/audio/mouse-clicks.mp3')
 
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const menuBtnRef = useRef<HTMLButtonElement | null>(null);
 
   const handleMenuClick = () => {
-    click();
     setIsOpen((prev) => !prev);
   };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      click();
       if (!event.target) return;
       const target = event.target as Node;
 
@@ -50,6 +44,7 @@ export default function Header() {
   return (
     <header className={styles.header}>
       <nav className={styles.headerNav}>
+        <MusicToggle />
         <Button ref={menuBtnRef} className={styles.menuBtn} onClick={handleMenuClick}>
           {isOpen ? "Close" : "Menu"}
         </Button>
