@@ -2,99 +2,193 @@
 
 import styles from "./provider.module.css";
 import { TransitionRouter } from "next-transition-router";
-import { useRef, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import gsap from "gsap";
+
+// ── Tweakables ──────────────────────────────────────────────────────────────
+const PIXEL_SIZE = 16; // chunkiness of the pixel grid (lower = finer)
+const BLOB_COLOR = "#0000FF";
+const LEAVE_DURATION = 1.1; // blobs grow and cover the page
+const ENTER_DURATION = 1.1; // blobs shrink away to reveal the new page
+const EASE = "power1.inOut";
+const BASE_THRESHOLD = 14000; // metaball threshold at rest; falls as progress rises
+const FULL_COVER_AT = 0.92; // past this progress, skip the field and fill the screen
+
+interface Blob {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  baseRadius: number;
+  maxRadius: number;
+}
+
+// x / y are fractions of the viewport; reach is a multiple of its longest side.
+const BLOB_SEEDS = [
+  { x: 0.15, y: 0.15, vx: 0.4, vy: 0.3, radius: 40, reach: 0.9 },
+  { x: 0.8, y: 0.2, vx: -0.3, vy: 0.5, radius: 70, reach: 0.95 },
+  { x: 0.2, y: 0.5, vx: 0.5, vy: -0.2, radius: 60, reach: 0.9 },
+  { x: 0.65, y: 0.6, vx: -0.4, vy: -0.4, radius: 90, reach: 1.1 },
+  { x: 0.3, y: 0.85, vx: 0.3, vy: -0.3, radius: 50, reach: 0.85 },
+  { x: 0.75, y: 0.85, vx: -0.2, vy: -0.5, radius: 55, reach: 0.9 },
+];
 
 export default function TransitionProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const svgRef = useRef<SVGSVGElement | null>(null);
-  const pathRef = useRef<SVGPathElement[]>([]);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const progressRef = useRef({ value: 0 }); // 0 = nothing on screen, 1 = fully covered
+  const blobsRef = useRef<Blob[]>([]);
+  const timeRef = useRef(0);
 
-  useEffect(() => {
-    if (!svgRef.current) return;
-    pathRef.current = Array.from(
-      svgRef.current.querySelectorAll<SVGPathElement>("path")
-    );
-    pathRef.current.forEach((path) => {
-      const length = path.getTotalLength();
-      path.style.strokeDasharray = `${length}`;
-      path.style.strokeDashoffset = `${length}`;
+  const resize = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }, []);
+
+  const seedBlobs = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const { width, height } = canvas;
+    const longest = Math.max(width, height);
+    blobsRef.current = BLOB_SEEDS.map((s) => ({
+      x: width * s.x,
+      y: height * s.y,
+      vx: s.vx,
+      vy: s.vy,
+      baseRadius: s.radius,
+      maxRadius: longest * s.reach,
+    }));
+  }, []);
+
+  // Ambient float before the blobs take over the screen
+  const drift = useCallback(() => {
+    timeRef.current += 0.03;
+    if (progressRef.current.value >= 0.5) return;
+    const t = timeRef.current;
+    blobsRef.current.forEach((blob, i) => {
+      blob.x += Math.sin(t + i) * blob.vx;
+      blob.y += Math.cos(t * 0.8 + i) * blob.vy;
     });
   }, []);
+
+  const draw = useCallback(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
+
+    const { width, height } = canvas;
+    const p = progressRef.current.value;
+
+    ctx.clearRect(0, 0, width, height);
+    if (p <= 0) return;
+
+    ctx.fillStyle = BLOB_COLOR;
+
+    if (p > FULL_COVER_AT) {
+      ctx.fillRect(0, 0, width, height);
+      return;
+    }
+
+    const blobs = blobsRef.current;
+    // Blobs grow out of nothing over the first 10% instead of popping in
+    const grow = Math.min(1, p / 0.1);
+    const threshold = BASE_THRESHOLD * (1 - p) + 200 * p;
+
+    // Each blob's field strength only depends on progress, so compute it once per frame
+    const strength = blobs.map((b) => {
+      const radius = b.baseRadius * grow + (b.maxRadius - b.baseRadius) * p;
+      return radius * radius * 1000;
+    });
+
+    const cols = Math.ceil(width / PIXEL_SIZE);
+    const rows = Math.ceil(height / PIXEL_SIZE);
+    const half = PIXEL_SIZE / 2;
+
+    // One path, one fill: far cheaper than a fillRect per cell
+    ctx.beginPath();
+    for (let r = 0; r < rows; r++) {
+      const py = r * PIXEL_SIZE + half;
+      for (let c = 0; c < cols; c++) {
+        const px = c * PIXEL_SIZE + half;
+        let sum = 0;
+        for (let i = 0; i < blobs.length; i++) {
+          const dx = px - blobs[i].x;
+          const dy = py - blobs[i].y;
+          const distSq = dx * dx + dy * dy;
+          sum += distSq > 1 ? strength[i] / distSq : 999999;
+        }
+        if (sum > threshold) {
+          ctx.rect(
+            c * PIXEL_SIZE,
+            r * PIXEL_SIZE,
+            PIXEL_SIZE + 0.5,
+            PIXEL_SIZE + 0.5
+          );
+        }
+      }
+    }
+    ctx.fill();
+  }, []);
+
+  useEffect(() => {
+    resize();
+    seedBlobs();
+
+    const onResize = () => {
+      resize(); // resizing wipes the canvas, so redraw the current frame
+      draw();
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [resize, seedBlobs, draw]);
+
+  // Tween progress to `target`, drawing on every update. Returns a cleanup fn.
+  const animateTo = useCallback(
+    (target: 0 | 1, duration: number, next: () => void) => {
+      const tween = gsap.to(progressRef.current, {
+        value: target,
+        duration,
+        ease: EASE,
+        onUpdate: () => {
+          drift();
+          draw();
+        },
+        onComplete: () => {
+          draw();
+          next();
+        },
+      });
+
+      return () => {
+        tween.kill();
+      };
+    },
+    [drift, draw]
+  );
 
   return (
     <TransitionRouter
       auto
       leave={(next) => {
-        const tl = gsap.timeline({ onComplete: next });
-
-        pathRef.current.forEach((path) => {
-          tl.to(
-            path,
-            {
-              strokeDashoffset: 0,
-              attr: { "stroke-width": 700 },
-              duration: 1,
-              ease: "power1.inOut",
-            },
-            0
-          );
-        });
-
-        return () => tl.kill();
+        // Fresh layout for each cycle, unless an interrupted transition is mid-way
+        if (progressRef.current.value === 0) {
+          resize();
+          seedBlobs();
+        }
+        return animateTo(1, LEAVE_DURATION, next);
       }}
-      enter={(next) => {
-        const tl = gsap.timeline({ onComplete: next });
-
-        pathRef.current.forEach((path) => {
-          const length = path.getTotalLength(); // Read length dynamically per path
-
-          tl.to(
-            path,
-            {
-              strokeDashoffset: -length,
-              attr: { "stroke-width": 200 },
-              duration: 1,
-              ease: "power1.inOut",
-              onComplete: () => {
-                gsap.set(path, { strokeDashoffset: length });
-              },
-            },
-            0
-          );
-        });
-
-        return () => tl.kill();
-      }}
+      enter={(next) => animateTo(0, ENTER_DURATION, next)}
     >
-      <div className={styles.transitionSvg}>
-        <svg
-          ref={svgRef}
-          width="992"
-          height="893"
-          viewBox="0 0 992 893"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M206.388 54.0083C121.799 195.516 37.2107 337.024 56.8785 354.979C76.5464 372.934 203.034 263.048 281.238 198.535C359.442 134.021 385.531 118.21 399.365 111.646C413.2 105.082 413.99 108.245 415.188 115.803C416.386 123.361 417.967 135.219 418.781 144.885C419.596 154.552 419.596 161.666 377.697 225.018C335.798 288.37 252 407.742 204.088 485.048C156.176 562.354 146.689 593.976 142.198 611.452C137.706 628.928 138.497 631.299 168.154 613.153C197.812 595.006 256.312 556.269 324 494.81C391.687 433.351 466.789 350.344 505.083 319.44C543.376 288.537 542.586 312.254 524.787 363.208C506.987 414.162 472.203 491.636 440.845 550.52C409.486 609.404 382.608 647.35 359.67 685.476C336.732 723.602 318.55 760.757 309.183 781.875C299.816 802.992 299.816 806.944 338.948 776.568C378.08 746.192 456.344 681.367 508.916 632.952C561.487 584.537 585.994 554.496 610.872 520.443C635.751 486.39 660.258 449.234 676.045 427.721C691.832 406.209 698.156 401.466 703.39 398.627C708.625 395.788 712.577 394.998 715.799 396.567C719.022 398.136 721.393 402.089 722.22 410.449C723.046 418.81 722.256 431.459 702.875 506.357C683.495 581.255 645.549 718.02 646.95 785.708C648.352 853.395 690.25 847.861 744.643 816.156C799.035 784.45 864.65 726.74 937.045 667.281"
-            strokeWidth="108"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            stroke="var(--transition-s-1)"
-          />
-          <path
-            d="M784.659 54.0083C869.247 195.516 953.836 337.024 934.168 354.979C914.5 372.934 788.012 263.048 709.808 198.535C631.604 134.021 605.516 118.21 591.681 111.646C577.847 105.082 577.056 108.245 575.858 115.803C574.661 123.361 573.079 135.219 572.265 144.885C571.45 154.552 571.451 161.666 613.349 225.018C655.248 288.37 739.046 407.742 786.958 485.048C834.87 562.354 844.357 593.976 848.849 611.452C853.34 628.928 852.55 631.299 822.892 613.153C793.235 595.006 734.734 556.269 667.047 494.81C599.359 433.351 524.257 350.344 485.964 319.44C447.67 288.537 448.461 312.254 466.26 363.208C484.059 414.162 518.843 491.636 550.202 550.52C581.56 609.404 608.439 647.35 631.376 685.476C654.314 723.602 672.497 760.757 681.864 781.875C691.23 802.992 691.23 806.944 652.098 776.568C612.966 746.192 534.702 681.367 482.131 632.952C429.559 584.537 405.052 554.496 380.174 520.443C355.296 486.39 330.789 449.234 315.002 427.721C299.215 406.209 292.89 401.466 287.656 398.627C282.422 395.788 278.469 394.998 275.247 396.567C272.025 398.136 269.653 402.089 268.827 410.449C268 418.81 268.791 431.459 288.171 506.357C307.552 581.255 345.498 718.02 344.096 785.708C342.695 853.395 300.796 847.861 246.404 816.156C192.012 784.45 126.396 726.74 54.0015 667.281"
-            strokeWidth="108"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            stroke="var(--transition-s-2)"
-          />
-        </svg>
-      </div>
+      <canvas
+        ref={canvasRef}
+        className={styles.transitionCanvas}
+        aria-hidden="true"
+      />
       {children}
     </TransitionRouter>
   );
