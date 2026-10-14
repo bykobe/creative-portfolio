@@ -2,10 +2,10 @@
 .root {
   position: fixed;
   inset: 0;
-  z-index: 1000001; /* above the page transition canvas (1000000) */
+  z-index: 100000;
   overflow: hidden;
   cursor: progress;
-  font-family: var(--archivo-narrow-font);
+  font-family: var(--archivo-narrow-font), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -14,11 +14,11 @@
   cursor: auto;
 }
 
-/* Starting colour. Gone (unseen, under solid blue) before the reveal. */
+/* Paper background set to bright yellow (#FFFF00) */
 .paper {
   position: absolute;
   inset: 0;
-  background: var(--preloader-paper, #ecece6);
+  background: var(--preloader-paper, #ffff00);
 }
 
 .canvas {
@@ -31,82 +31,131 @@
 }
 
 /*
-  White type + `difference`: near-black over the paper, and exactly yellow
-  (#FFFF00) over #0000FF. One layer of text, two colours, no JS.
+  Difference mode: Pure white UI text over #0000FF pixel blobs renders as pure black (#000000)
+  over bright yellow (#FFFF00).
 */
 .ui {
   position: absolute;
   inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: clamp(16px, 2.2vw, 36px);
-  color: #fff;
+  color: #ffffff;
   mix-blend-mode: difference;
   pointer-events: none;
+  padding: var(--spacing-sm);
 }
 
-.top,
-.bottom {
+/* Sprite graphic top-right (Flipped upside down) */
+.character {
+  position: absolute;
+  top: clamp(20px, 3vw, 40px);
+  right: clamp(20px, 3vw, 40px);
+  width: clamp(80px, 10vw, 140px);
+  height: clamp(80px, 10vw, 140px);
+  image-rendering: pixelated;
   display: flex;
-  justify-content: space-between;
-  gap: 24px;
-}
-
-.top {
+  justify-content: flex-end;
   align-items: flex-start;
+  transform: scaleY(-1);
 }
 
-.bottom {
+.character img,
+.character svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* ── Individual Scattered Text Lines ────────────────────────────────────── */
+
+.statusMessage {
+  position: absolute;
+  font-size: clamp(14px, 1.4vw, 22px);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  will-change: opacity, transform;
+}
+
+.statusMessage.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Precise individual line coordinates matching your layout */
+.line1 {
+  top: 18%;
+  left: 8%;
+}
+
+.line2 {
+  top: 23%;
+  left: 8%;
+}
+
+.line3 {
+  top: 38%;
+  right: 10%;
+  text-align: right;
+}
+
+.line4 {
+  top: 43%;
+  right: 10%;
+  text-align: right;
+}
+
+.line5 {
+  top: 56%;
+  left: 18%;
+}
+
+.line6 {
+  top: 61%;
+  left: 18%;
+}
+
+.line7 {
+  bottom: 13%;
+  right: 8%;
+  text-align: right;
+}
+
+.line8 {
+  bottom: 8%;
+  right: 8%;
+  text-align: right;
+}
+
+/* ── Pixel Counter (Bottom-Left) ────────────────────────────────────────── */
+
+.counterWrapper {
+  position: absolute;
+  bottom: clamp(24px, 4vw, 50px);
+  left: clamp(24px, 4vw, 50px);
+  display: flex;
   align-items: flex-end;
 }
 
-.mask {
-  display: block;
-  overflow: hidden;
-}
-
-/* Intro. `backwards` so GSAP can take over the transform for the exit. */
-.rise {
-  display: block;
-  animation: rise 1.1s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-}
-
-@keyframes rise {
-  from {
-    transform: translate3d(0, 110%, 0);
-  }
-}
-
-.label {
-  font-size: clamp(11px, 0.85vw, 13px);
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-/* ── Counter ─────────────────────────────────────────────────────────────── */
-
 .counter {
-  --row: 0.8em;
-  display: flex;
-  align-items: flex-start;
-  font-size: clamp(8.5rem, 31vw, 38rem);
-  font-weight: 600;
-  letter-spacing: -0.06em;
-  line-height: 1;
+  font-family: monospace, monospace;
+  font-size: clamp(4.5rem, 12vw, 12rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.85;
   font-variant-numeric: tabular-nums;
+  display: flex;
+  image-rendering: pixelated;
 }
 
 .col {
-  display: block;
-  width: calc(1ch - 0.06em);
-  height: var(--row);
+  display: inline-block;
+  width: 1ch;
+  height: 1em;
   overflow: hidden;
-}
-
-.col:nth-child(-n + 2) {
-  opacity: 0.18; /* leading zeros; the script takes over once it's running */
 }
 
 .strip {
@@ -116,70 +165,9 @@
 
 .digit {
   display: block;
-  height: var(--row);
-  line-height: var(--row);
-}
-
-.pct {
-  margin: 0.08em 0 0 0.25em;
-  font-size: 0.2em;
-  font-weight: 500;
-  letter-spacing: 0;
-  line-height: 1;
-}
-
-/* ── Status ──────────────────────────────────────────────────────────────── */
-
-.status {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding-bottom: clamp(4px, 0.6vw, 10px);
-  font-size: clamp(12px, 0.95vw, 15px);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-}
-
-/* Lines are absolutely positioned (they swap over each other), so the host
-   can't size itself. Make this wide enough for your longest message. */
-.statusHost {
-  position: relative;
-  min-width: 26ch;
-  height: 1.5em;
-  overflow: hidden;
-}
-
-.statusLine {
-  position: absolute;
-  top: 0;
-  left: 0;
-  line-height: 1.5;
-  white-space: nowrap;
-}
-
-/* 3×3 pixel loader: a diagonal wave, stepped so it flickers like a sprite */
-.pixels {
-  display: grid;
-  grid-template-columns: repeat(3, 5px);
-  gap: 2px;
-}
-
-.pixels i {
-  width: 5px;
-  height: 5px;
-  background: currentColor;
-  animation: blink 1.2s steps(1) infinite;
-}
-
-@keyframes blink {
-  0%,
-  100% {
-    opacity: 0.2;
-  }
-  25%,
-  50% {
-    opacity: 1;
-  }
+  height: 1em;
+  line-height: 1em;
+  text-align: center;
 }
 
 .srOnly {
@@ -192,21 +180,22 @@
 }
 
 @media (max-width: 640px) {
-  .bottom {
-    flex-direction: column-reverse;
-    align-items: flex-start;
-    gap: 18px;
-  }
+  .line1 { top: 10%; left: 5%; }
+  .line2 { top: 15%; left: 5%; }
+  .line3 { top: 30%; right: 5%; text-align: right; }
+  .line4 { top: 35%; right: 5%; text-align: right; }
+  .line5 { top: 50%; left: 5%; }
+  .line6 { top: 55%; left: 5%; }
+  .line7 { bottom: 23%; right: 5%; text-align: right; }
+  .line8 { bottom: 18%; right: 5%; text-align: right; }
 
-  /* Let the number fill the width of a phone */
   .counter {
-    font-size: 42vw;
+    font-size: 22vw;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .rise,
-  .pixels i {
-    animation: none;
+  .statusMessage {
+    transition: none;
   }
 }
