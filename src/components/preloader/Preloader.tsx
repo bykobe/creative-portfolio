@@ -32,7 +32,7 @@ const MESSAGES = [
   {
     id: "line-1",
     at: 0,
-    text: "Please be patient",
+    text: "please be patient",
     positionClass: styles.line1,
   },
   {
@@ -44,13 +44,13 @@ const MESSAGES = [
   {
     id: "line-3",
     at: 28,
-    text: "Still gathering data on Kobe",
+    text: "still gathering data on Kobe",
     positionClass: styles.line3,
   },
   {
     id: "line-4",
     at: 42,
-    text: "... where is he hiding???",
+    text: "...where is he hiding???",
     positionClass: styles.line4,
   },
   {
