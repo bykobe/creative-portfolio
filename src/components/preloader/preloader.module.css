@@ -5,7 +5,7 @@
   z-index: 1000001; /* above the page transition canvas (1000000) */
   overflow: hidden;
   cursor: progress;
-  font-family: var(--font-preloader, "Helvetica Neue", Helvetica, Arial, sans-serif);
+  font-family: var(--archivo-narrow-font);
   -webkit-font-smoothing: antialiased;
 }
 

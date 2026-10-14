@@ -5,6 +5,8 @@ import * as THREE from 'three';
 import { useEffect, useRef } from "react";
 import { DRACOLoader, GLTFLoader, OrbitControls } from "three/examples/jsm/Addons.js";
 import { landingGate } from "@/providers/landing-gate";
+import { preloader } from "./hooks/preloaderStore";
+import { createReadyTracker } from "./utils/sceneReady";
 
 // ==========================================
 // SETTINGS
@@ -384,6 +386,22 @@ export default function Scene() {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
+    // ==========================================
+    // PRELOADER REPORTING
+    // ==========================================
+    // Tells the preloader how far along the scene is. The model's download is most of it; the rest
+    // is "model parsed and placed" and "monitor image applied". Once both of those are done the
+    // tracker compiles every shader and waits for a few smooth frames before the cover may open.
+    const loadState = { download: 0, placed: false, screenImage: !SCREEN_IMAGE_URL };
+    const readyTracker = createReadyTracker(renderer, scene, camera);
+    const reportLoad = () => {
+      if (disposed) return; // the effect was torn down (React dev double-mount)
+      preloader.setAssets(
+        loadState.download * 90 + (loadState.placed ? 5 : 0) + (loadState.screenImage ? 5 : 0)
+      );
+      if (loadState.placed && loadState.screenImage) readyTracker.start();
+    };
+
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
@@ -585,9 +603,15 @@ export default function Scene() {
           texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
           screenTexture = texture;
           placeScreenImage();
+          loadState.screenImage = true;
+          reportLoad();
         },
         undefined,
-        (error) => console.error(`[Scene] Could not load ${SCREEN_IMAGE_URL}:`, error)
+        (error) => {
+          console.error(`[Scene] Could not load ${SCREEN_IMAGE_URL}:`, error);
+          loadState.screenImage = true; // don't hold the preloader for a missing picture
+          reportLoad();
+        }
       );
     }
 
@@ -646,12 +670,22 @@ export default function Scene() {
       }
       refreshCameraPath();
       placeScreenImage();
+      loadState.placed = true;
+      reportLoad();
     },
-    undefined,
+    (event) => {
+      // Real bytes. (If the server doesn't send a length, the counter just creeps until the model lands.)
+      if (event.lengthComputable && event.total > 0) {
+        loadState.download = Math.min(1, event.loaded / event.total);
+        reportLoad();
+      }
+    },
     (error) => {
       if (disposed) return; // the effect was torn down (React dev double-mount): not a real failure
       console.error("An error occurred loading the model:", error);
       landingGate.skip(); // no scene to scroll through: just show the landing page
+      preloader.setAssets(100); // nothing left to wait for: let the cover open
+      preloader.markSceneReady();
     });
 
     // Dev tool: click anywhere on the model and the console prints the mesh and material under
@@ -751,6 +785,7 @@ export default function Scene() {
       }
 
       renderer.render(scene, camera);
+      readyTracker.frame();
     };
     animate();
 
@@ -761,6 +796,7 @@ export default function Scene() {
       renderer.domElement.removeEventListener('pointerdown', handlePointerDown);
       renderer.domElement.removeEventListener('pointerup', handlePointerUp);
       disposed = true;
+      readyTracker.cancel();
       unsubscribeGate();
       landingGate.reset();
       cancelAnimationFrame(animationFrameId);

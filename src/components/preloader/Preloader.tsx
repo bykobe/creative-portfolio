@@ -18,11 +18,12 @@ const YEAR = new Date().getFullYear();
 // and white-minus-#0000FF is exactly yellow (the colour of your monitor).
 const BLOB_COLOR = "#0000FF";
 
-// All timings are measured from the start of the page load, since the cover
-// is server-rendered and the visitor has been looking at it since first paint.
+// All timings are measured from the moment the cover mounts. (Not from navigation start:
+// in dev, on a slow connection, or after a Fast Refresh that is many seconds earlier, and the
+// minimum duration, the creep and the fail-safe would all fire at once.)
 const MIN_DURATION = 2.8; // seconds. Even a cached load gets the full sequence
 const REPEAT_MIN_DURATION = 1.4; // ...but a returning visitor (same tab session) gets a short one
-const FAIL_SAFE = 25; // seconds. If the scene never reports in, open anyway
+const FAIL_SAFE = 30; // seconds. If the scene never reports in, open anyway
 const HOLD = 0.3; // seconds the 100 sits on solid blue before the type leaves
 const REVEAL_DURATION = 1.3; // seconds for the blobs to dissolve
 const SEEN_KEY = "preloader:seen";
@@ -239,9 +240,7 @@ export default function Preloader({ onRevealStart, onComplete }: PreloaderProps)
     const tick = (_time: number, deltaMs: number) => {
       // While the scene compiles, frames can be very long; don't let one jump the animation
       const dt = Math.min(deltaMs, 100) / 1000;
-      const now = performance.now();
-      const elapsed = now / 1000; // since navigation start
-      const sinceMount = (now - mountedAt) / 1000;
+      const elapsed = (performance.now() - mountedAt) / 1000; // since the cover mounted
 
       if (!exiting) {
         const { assets, sceneReady } = preloader.getState();
@@ -261,7 +260,7 @@ export default function Preloader({ onRevealStart, onComplete }: PreloaderProps)
 
         if (!reduceMotion) {
           // A first beat of tiny blobs so the start isn't an empty page
-          const intro = 0.05 * easeOutCubic(clamp(sinceMount / 1));
+          const intro = 0.05 * easeOutCubic(clamp(elapsed / 1));
           fieldP = Math.max(intro, FIELD_FULL_AT * clamp(displayed / COVER_AT));
         }
 
