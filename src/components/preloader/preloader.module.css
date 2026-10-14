@@ -14,11 +14,10 @@
   cursor: auto;
 }
 
-/* Paper background set to bright yellow (#FFFF00) */
 .paper {
   position: absolute;
   inset: 0;
-  background: var(--preloader-paper, #ffff00);
+  background:  var(--swart);
 }
 
 .canvas {
@@ -38,19 +37,17 @@
   position: absolute;
   inset: 0;
   color: #ffffff;
-  mix-blend-mode: difference;
   pointer-events: none;
-  padding: var(--spacing-sm);
 }
 
 /* Sprite graphic top-right (Flipped upside down) */
 .character {
   position: absolute;
-  top: clamp(20px, 3vw, 40px);
-  right: clamp(20px, 3vw, 40px);
+  top: 0;
+  right: var(--spacing-sm);
   width: clamp(80px, 10vw, 140px);
   height: clamp(80px, 10vw, 140px);
-  image-rendering: pixelated;
+  image-rendering: crisp-edges;
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
@@ -92,8 +89,8 @@
 }
 
 .line2 {
-  top: 23%;
-  left: 8%;
+  top: 21%;
+  left: 3%;
 }
 
 .line3 {
@@ -103,19 +100,19 @@
 }
 
 .line4 {
-  top: 43%;
-  right: 10%;
+  top: 41%;
+  right: 5%;
   text-align: right;
 }
 
 .line5 {
   top: 56%;
-  left: 18%;
+  left: 38%;
 }
 
 .line6 {
-  top: 61%;
-  left: 18%;
+  top: 59%;
+  left: 30%;
 }
 
 .line7 {
@@ -125,8 +122,8 @@
 }
 
 .line8 {
-  bottom: 8%;
-  right: 8%;
+  bottom: 10%;
+  right: 12%;
   text-align: right;
 }
 
@@ -134,15 +131,15 @@
 
 .counterWrapper {
   position: absolute;
-  bottom: clamp(24px, 4vw, 50px);
-  left: clamp(24px, 4vw, 50px);
+  bottom: 5px;
+  left: 5px;
   display: flex;
   align-items: flex-end;
 }
 
 .counter {
   font-family: monospace, monospace;
-  font-size: clamp(4.5rem, 12vw, 12rem);
+  font-size: var(--heading-4);
   font-weight: 900;
   letter-spacing: -0.05em;
   line-height: 0.85;

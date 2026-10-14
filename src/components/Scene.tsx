@@ -3,7 +3,8 @@
 import styles from "./components.module.css";
 import * as THREE from 'three';
 import { useEffect, useRef } from "react";
-import { DRACOLoader, GLTFLoader, OrbitControls } from "three/examples/jsm/Addons.js";
+import { DRACOLoader, GLTFLoader, KTX2Loader, OrbitControls } from "three/examples/jsm/Addons.js";
+import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { landingGate } from "@/providers/landing-gate";
 import { preloader } from "./hooks/preloaderStore";
 import { createReadyTracker } from "./utils/sceneReady";
@@ -16,6 +17,11 @@ import { createReadyTracker } from "./utils/sceneReady";
 // Google. To self-host instead, copy node_modules/three/examples/jsm/libs/draco/gltf into
 // /public/draco/ and use "/draco/".
 const DRACO_DECODER_PATH = "https://www.gstatic.com/draco/versioned/decoders/1.5.7/";
+
+// Compressed textures (KTX2 / Basis) need a transcoder, from the same three release as your
+// install. To self-host, copy node_modules/three/examples/jsm/libs/basis into /public/basis/ and
+// use "/basis/". (Meshopt-compressed geometry needs nothing: its decoder is bundled.)
+const BASIS_TRANSCODER_PATH = `https://cdn.jsdelivr.net/npm/three@0.${THREE.REVISION}.0/examples/jsm/libs/basis/`;
 
 // The monitor's glass, by the name of its material in the model (the laptop and phone screens
 // use other names). With DEBUG_PICK_MESH on, click any screen and the console prints the names
@@ -632,7 +638,12 @@ export default function Scene() {
     dracoLoader.setDecoderPath(DRACO_DECODER_PATH);
     const modelLoader = new GLTFLoader();
     modelLoader.setDRACOLoader(dracoLoader);
-    const model = "/models/computer_set.glb";
+    // Every way a .glb can be compressed has to be registered here, or the load fails outright:
+    // Draco (above), Meshopt (gltfpack, gltf-transform optimize) and KTX2 textures.
+    const ktx2Loader = new KTX2Loader().setTranscoderPath(BASIS_TRANSCODER_PATH).detectSupport(renderer);
+    modelLoader.setKTX2Loader(ktx2Loader);
+    modelLoader.setMeshoptDecoder(MeshoptDecoder);
+    const model = "/models/computer_set-compressed.glb";
 
     modelLoader.load(model, (glb) => {
       animatedModel = glb.scene;
@@ -802,6 +813,7 @@ export default function Scene() {
       cancelAnimationFrame(animationFrameId);
       controls.dispose();
       dracoLoader.dispose();
+      ktx2Loader.dispose();
       screenTexture?.dispose();
       renderer.dispose();
     };

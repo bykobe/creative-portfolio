@@ -9,6 +9,7 @@ import {
   FIELD_NEARLY_FULL,
 } from "../utils/pixel-blob-field";
 import { preloader } from "../hooks/preloaderStore";
+import KobeSprite from "../ui/svgs/KobeSprite";
 
 // ── Tweakables ──────────────────────────────────────────────────────────────
 const BLOB_COLOR = "#0000FF"; // Difference blend over bright yellow (#FFFF00) creates black
@@ -294,9 +295,7 @@ export default function Preloader({
           {characterSpriteUrl ? (
             <img src={characterSpriteUrl} alt="" />
           ) : (
-            <svg viewBox="0 0 16 16" fill="currentColor">
-              <path d="M6 1h4v2H6zM4 3h8v2H4zM3 5h10v3H3zM4 8h8v2H4zM5 10h6v2H5zM6 12h4v3H6z" />
-            </svg>
+            <KobeSprite />
           )}
         </div>
 
