@@ -82,9 +82,9 @@ const TOOLS: Item[] = [
 
 const EXPERIENCE = [
   { company: "GCTU", role: "Software Intern" },
-  { company: "STAYR", role: "Co-Founder + Frontend Lead" },
+  { company: "STAYR Inc.", role: "Co-Founder + Frontend Lead" },
   { company: "ARCHIVE STUDIOS", role: "Founder + Design Engineer" },
-  { company: "Upwork", role: "Freelance" },
+  { company: "Upwork", role: "Freelance(Remote)" },
   { company: "GO2COD", role: "Frontend Internship(Remote)" },
 ];
 
@@ -130,7 +130,7 @@ export default function CorporatePage() {
         <div className={styles.corp_subline}>
           <div className={styles.corp_subline_left}>
             <span className={styles.corp_subline_t1}>
-              I am a multi-disciplinary creative based in <span className={styles.corp_muted}>Accra.</span>
+              I am a self-taught multi-disciplinary creative based in <span className={styles.corp_muted}>Accra.</span>
             </span>
             {/* prefetch off: don't pull the heavy 3D route in while someone reads the resume */}
             <Link href="/" prefetch={false} className={styles.corp_subline_nav}>
