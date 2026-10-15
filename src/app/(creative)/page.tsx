@@ -1,6 +1,6 @@
-"use client";
+//CREATIVE PAGE.TSX
 
-import styles from "../styles/main.module.css";
+import styles from "../../styles/main.module.css";
 import Hero from "@/components/sections/Hero";
 import Spotlight from "@/components/sections/Spotlight";
 import About from "@/components/sections/About";

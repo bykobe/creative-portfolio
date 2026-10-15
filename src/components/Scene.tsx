@@ -8,6 +8,7 @@ import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.j
 import { landingGate } from "@/providers/landing-gate";
 import { preloader } from "./hooks/preloaderStore";
 import { createReadyTracker } from "./utils/sceneReady";
+import PageHandler from "./handler/PageHandler";
 
 // ==========================================
 // SETTINGS
@@ -831,6 +832,7 @@ export default function Scene() {
         overflow: "hidden",
       }}
     >
+      <PageHandler />
       <canvas ref={canvasRef} className={styles.webGl}></canvas>
     </div>
   );

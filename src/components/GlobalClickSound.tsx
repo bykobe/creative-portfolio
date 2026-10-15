@@ -9,7 +9,7 @@ export default function GlobalClickSound() {
 
   useEffect(() => {
     const onPointerDown = (event: PointerEvent) => {
-      if (event.button > 0) return; // left click / touch / pen only
+      if (event.button > 0) return;
       click();
     };
     window.addEventListener("pointerdown", onPointerDown, { capture: true });
