@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "../styles/globals.css";
-import TransitionProvider from "@/providers/transition-provider";
 import Preloader from "@/components/preloader/Preloader";
 
 export const metadata: Metadata = {
@@ -17,9 +16,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Preloader />
-        <TransitionProvider>
           {children}
-        </TransitionProvider>
       </body>
     </html>
   );

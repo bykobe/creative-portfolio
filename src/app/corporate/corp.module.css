@@ -1,0 +1,180 @@
+/* src/app/corporate/corp.module.css
+   Uses your existing variables: --swart, --white, --archivo-narrow-font, --bricolage-font */
+
+.corp_main {
+  --line: rgba(255, 255, 255, 0.18);  /* the vertical grid lines */
+  --muted: #8a8a8a;
+  --pad: clamp(8px, 0.75vw, 12px);
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(32px, 8vh, 96px);
+  padding-bottom: 6px;
+  background-color: var(--swart);
+  color: var(--white);
+  overflow: clip; /* the clock bleeds off the bottom edge on purpose */
+}
+
+/* ---------- background grid ---------- */
+.corp_bg {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  pointer-events: none;
+}
+
+.corp_bg > div {
+  height: 100%;
+  border-right: 1px solid var(--line);
+}
+
+/* ---------- headline ---------- */
+.corp_headline {
+  position: relative;
+  z-index: 1; /* text always sits above the clock */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* the KobeCorp wordmark spans the page, whatever props it takes */
+.corp_headline > svg {
+  display: block;
+  width: calc(100% - 2 * var(--pad));
+  height: auto;
+  margin: 0 auto;
+}
+
+.corp_subline {
+  padding: 0 var(--pad);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.corp_subline_left {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.corp_subline_t1,
+.corp_subline_nav {
+  font-family: var(--archivo-narrow-font);
+  font-size: clamp(12px, 1.05vw, 16px);
+  line-height: 1.2;
+}
+
+.corp_subline_nav {
+  width: fit-content;
+  font-weight: 600;
+  color: inherit;
+  text-decoration: none;
+}
+
+.corp_subline_nav:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.corp_subline_right {
+  text-align: right;
+}
+
+.corp_subline_right strong {
+  font-weight: 600;
+}
+
+.corp_muted {
+  color: var(--muted);
+}
+
+/* ---------- the four lists, on the four grid columns ---------- */
+.corp_cs_wrapper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.corp_cs_list {
+  padding: 0 var(--pad);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55em;
+  font-size: clamp(14px, 1.4vw, 20px);
+}
+
+.corp_cs_list h2 {
+  margin: 0;
+  font-family: var(--bricolage-font);
+  font-size: 1.2em;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.corp_list_items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--archivo-narrow-font);
+  font-size: 14px;
+  line-height: 1.45;
+  color: #e9e9e9;
+}
+
+.corp_list_items a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.corp_list_items a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.corp_list_items a:focus-visible,
+.corp_subline_nav:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* ---------- clock ---------- */
+.corp_clock {
+  position: absolute;
+  right: -10px;
+  bottom: 5px;
+  z-index: 0;
+  font-family: var(--pixelify-font, ui-monospace, monospace);
+  font-size: clamp(56px, 8.4vw, 130px);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: #3b3b3b;
+  white-space: nowrap;
+  writing-mode: vertical-rl;     /* with the half turn below, it reads bottom to top */
+  transform: rotate(180deg);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---------- narrower screens ---------- */
+@media (max-width: 900px) {
+  .corp_bg { grid-template-columns: repeat(2, 1fr); }
+  .corp_bg > div:nth-child(n + 3) { display: none; }
+  .corp_cs_wrapper { grid-template-columns: repeat(2, 1fr); row-gap: 28px; }
+  .corp_cs_list { font-size: 16px; }
+  .corp_clock { font-size: 64px; }
+}
+
+@media (max-width: 560px) {
+  .corp_subline { flex-direction: column; }
+  .corp_subline_right { text-align: left; }
+}
