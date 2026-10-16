@@ -12,7 +12,7 @@ import gsap from "gsap";
  */
 const VIEW_H = 435;
 
-export default function KobeCorp({ delay = 0.15 }: { delay?: number }) {
+export default function KobeCorp({ delay = 0.45 }: { delay?: number }) {
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {

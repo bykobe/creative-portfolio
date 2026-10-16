@@ -1,0 +1,219 @@
+/* src/app/corporate/case-study/[slug]/case.module.css
+   Uses your existing variables: --swart, --white, --archivo-narrow-font, --bricolage-font,
+   and --pixel-font (point it at your clock font). */
+
+.case_main {
+  --line: rgba(255, 255, 255, 0.18);
+  --muted: #8a8a8a;
+  --pad: clamp(8px, 0.75vw, 12px);
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background-color: var(--swart);
+  color: var(--white);
+  font-family: var(--archivo-narrow-font);
+}
+
+/* ---------- grid lines: fixed, above the image, never block clicks ---------- */
+.case_bg {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  pointer-events: none;
+}
+
+.case_bg > div {
+  height: 100%;
+  border-right: 1px solid var(--line);
+}
+
+/* ---------- left column: stays put while the right side scrolls ---------- */
+.case_side {
+  grid-column: 1;
+  position: fixed;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  height: 100svh;
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+.case_side_title {
+  margin: 0 0 0.55em;
+  font-family: var(--bricolage-font);
+  font-size: 1.2em;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.case_side_list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.case_side_list a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.case_side_list a:hover,
+.case_side_list a.case_active {
+  color: var(--white);
+}
+
+.case_name {
+  margin: 0;
+  font-family: var(--bricolage-font);
+  font-size: var(--heading-4);
+  font-weight: 600;
+  line-height: 0.82;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- right side: image, then the three text columns ---------- */
+.case_content {
+  grid-column: 2 / -1;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.case_hero {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #0d0d0d;
+  overflow: hidden;
+}
+
+.case_hero_img {
+  object-fit: cover;
+}
+
+.case_sections {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* sits exactly on the grid lines */
+  margin-top: clamp(64px, 10.5vw, 160px);
+  padding-bottom: var(--pad);
+}
+
+.case_section {
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--pad) 0 5px;
+  min-width: 0;
+}
+
+.case_section h2 {
+  margin: 0 0 0.6em;
+  font-family: var(--bricolage-font);
+  font-size: clamp(18px, 1.7vw, 26px);
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.case_body {
+  padding-left: 3px;
+  font-size: clamp(13px, 0.98vw, 15px);
+  line-height: 1.36;
+}
+
+.case_body p {
+  margin: 0 0 1.36em;
+}
+
+.case_body a {
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.case_body a:hover {
+  color: var(--white);
+}
+
+.case_credits {
+  margin: 0;
+  padding: 0 0 0 3px;
+  list-style: none;
+  font-size: clamp(12px, 0.9vw, 14px);
+  line-height: 1.2;
+}
+
+.case_credits span {
+  color: var(--muted);
+}
+
+.case_back {
+  margin-top: auto;
+  padding: 2em 0 0 3px;
+  font-size: clamp(12px, 0.9vw, 14px);
+  color: var(--white);
+  text-decoration: none;
+  width: fit-content;
+}
+
+.case_back:hover {
+  text-decoration: underline;
+}
+
+/* ---------- clock: fixed to the bottom-right corner, behind the text ---------- */
+.case_clock {
+    position: fixed;
+    right: -10px;
+    bottom: 5px;
+    z-index: 0;
+    font-family: var(--pixelify-font, ui-monospace, monospace);
+    font-size: clamp(56px, 8.4vw, 130px);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: #3b3b3b;
+    white-space: nowrap;
+    writing-mode: vertical-rl;     /* with the half turn below, it reads bottom to top */
+    transform: rotate(180deg);
+    pointer-events: none;
+    user-select: none;
+}
+
+/* ---------- tablet / phone: one column, sidebar becomes a header ---------- */
+@media (max-width: 900px) {
+  .case_main { display: block; }
+  .case_bg { grid-template-columns: repeat(2, 1fr); }
+  .case_bg > div:nth-child(n + 3) { display: none; }
+
+  .case_side {
+    position: static;
+    height: auto;
+    gap: 28px;
+  }
+
+  .case_name { order: -1; font-size: clamp(44px, 12vw, 72px); }
+
+  .case_hero { margin: 0 var(--pad); }
+
+  .case_sections {
+    grid-template-columns: 1fr;
+    row-gap: 32px;
+    margin: 32px var(--pad) 0;
+  }
+
+  .case_section { padding: 0; }
+  .case_back { padding-top: 1em; }
+  .case_clock { font-size: 64px; color: #2a2a2a; } /* dimmed so it never fights the text */
+}

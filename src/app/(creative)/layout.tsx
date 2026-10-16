@@ -1,7 +1,6 @@
 "use client";
 
 // src/app/(creative)/layout.tsx
-// Everything that only the 3D / creative mode needs. The corporate page never loads any of it.
 
 import "lenis/dist/lenis.css";
 import Header from "@/components/Header";
@@ -12,6 +11,7 @@ import BackgroundMusic from "@/providers/background-music";
 import GlobalClickSound from "@/components/GlobalClickSound";
 import TransitionProvider from "@/providers/transition-provider";
 import Preloader from "@/components/preloader/Preloader";
+import { bootState } from "@/providers/boot-state";
 
 export default function CreativeLayout({
   children,
@@ -20,13 +20,13 @@ export default function CreativeLayout({
 }) {
   return (
     <>
-      <Preloader />
+      {!bootState.visitedCorporate && <Preloader />}
       <NoiseModule />
       <BackgroundMusic>
         <GlobalClickSound />
         <SmoothScroll>
           <Header />
-          <TransitionProvider>{children}</TransitionProvider>
+          {children}
           <div data-landing-gate="" style={{ display: "contents" }}>
             <Footer />
           </div>

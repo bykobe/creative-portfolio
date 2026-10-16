@@ -65,11 +65,11 @@ function Clock({ className }: { className?: string }) {
 type Item = { title: string; href?: string };
 
 const WORK: Item[] = [
-  { title: "JUICED" },
-  { title: "Cresta" },
-  { title: "PHILLY'S" },
-  { title: "Stillz.co" },
-  { title: "STAYR Inc." },
+  { title: "JUICED", href: "/corporate/case-study/juiced" },
+  { title: "Cresta", href: "/corporate/case-study/cresta" },
+  { title: "PHILLY'S", href: "/corporate/case-study/phillys" },
+  { title: "Stillz.co", href: "/corporate/case-study/stillz" },
+  { title: "STAYR Inc.", href: "/corporate/case-study/stayr" },
 ];
 
 const TOOLS: Item[] = [
@@ -101,12 +101,17 @@ function LinkList({ items }: { items: Item[] }) {
     <ul className={styles.corp_list_items}>
       {items.map(({ title, href }) => (
         <li key={title}>
-          {href ? (
+          {!href ? (
+            <span>{title}</span>
+          ) : href.startsWith("/") ? (
+            // internal page (e.g. a case study): client-side navigation, no prefetch
+            <Link href={href} prefetch={false}>
+              {title}
+            </Link>
+          ) : (
             <a href={href} {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
               {title}
             </a>
-          ) : (
-            <span>{title}</span>
           )}
         </li>
       ))}
@@ -131,6 +136,8 @@ export default function CorporatePage() {
           <div className={styles.corp_subline_left}>
             <span className={styles.corp_subline_t1}>
               I am a self-taught multi-disciplinary creative based in <span className={styles.corp_muted}>Accra.</span>
+              <br />
+              Currently exploring Three.JS and Shaders
             </span>
             {/* prefetch off: don't pull the heavy 3D route in while someone reads the resume */}
             <Link href="/" prefetch={false} className={styles.corp_subline_nav}>

@@ -9,7 +9,7 @@ import gsap from "gsap";
 const PIXEL_SIZE = 16; // chunkiness of the pixel grid (lower = finer)
 const BLOB_COLOR = "#0000FF";
 const LEAVE_DURATION = 1.1; // blobs grow and cover the page
-const ENTER_DURATION = 1.1; // blobs shrink away to reveal the new page
+const ENTER_DURATION = 1.1; // the curtain swipes up to reveal the new page
 const EASE = "power1.inOut";
 const BASE_THRESHOLD = 14000; // metaball threshold at rest; falls as progress rises
 const FULL_COVER_AT = 0.92; // past this progress, skip the field and fill the screen
@@ -40,6 +40,7 @@ export default function TransitionProvider({
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const progressRef = useRef({ value: 0 }); // 0 = nothing on screen, 1 = fully covered
+  const curtainRef = useRef({ value: 0 }); // 0 = full cover, 1 = curtain swiped off the top
   const blobsRef = useRef<Blob[]>([]);
   const timeRef = useRef(0);
 
@@ -85,6 +86,16 @@ export default function TransitionProvider({
     const p = progressRef.current.value;
 
     ctx.clearRect(0, 0, width, height);
+
+    // Reveal: the solid cover slides straight up and off the top of the screen.
+    // Its bottom edge rises from the bottom of the viewport to the top.
+    const c = curtainRef.current.value;
+    if (c > 0) {
+      ctx.fillStyle = BLOB_COLOR;
+      ctx.fillRect(0, 0, width, height * (1 - c));
+      return;
+    }
+
     if (p <= 0) return;
 
     ctx.fillStyle = BLOB_COLOR;
@@ -171,10 +182,60 @@ export default function TransitionProvider({
     [drift, draw]
   );
 
+  // Curtain swipe up: the screen is fully covered when this starts (the leave phase ends at
+  // progress 1), then the cover slides up and off. Returns a cleanup fn.
+  const swipeUp = useCallback(
+    (duration: number, next: () => void) => {
+      // Nothing is covering the screen (e.g. no leave phase ran): don't flash a curtain
+      if (progressRef.current.value <= 0) {
+        next();
+        return;
+      }
+      progressRef.current.value = 1; // be sure the cover is solid underneath
+      curtainRef.current.value = 0;
+
+      const tween = gsap.to(curtainRef.current, {
+        value: 1,
+        duration,
+        ease: EASE,
+        onUpdate: draw,
+        onComplete: () => {
+          // Fully off screen: reset everything for the next transition
+          progressRef.current.value = 0;
+          curtainRef.current.value = 0;
+          draw();
+          next();
+        },
+      });
+
+      return () => {
+        tween.kill();
+      };
+    },
+    [draw]
+  );
+
   return (
     <TransitionRouter
       auto
       leave={(next) => {
+        // A new navigation interrupted a swipe: drop the curtain back down first
+        if (curtainRef.current.value > 0) {
+          const tween = gsap.to(curtainRef.current, {
+            value: 0,
+            duration: 0.35,
+            ease: EASE,
+            onUpdate: draw,
+            onComplete: () => {
+              draw();
+              next();
+            },
+          });
+          return () => {
+            tween.kill();
+          };
+        }
+
         // Fresh layout for each cycle, unless an interrupted transition is mid-way
         if (progressRef.current.value === 0) {
           resize();
@@ -182,7 +243,7 @@ export default function TransitionProvider({
         }
         return animateTo(1, LEAVE_DURATION, next);
       }}
-      enter={(next) => animateTo(0, ENTER_DURATION, next)}
+      enter={(next) => swipeUp(ENTER_DURATION, next)}
     >
       <canvas
         ref={canvasRef}

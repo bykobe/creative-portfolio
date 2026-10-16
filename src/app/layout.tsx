@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "../styles/globals.css";
-import Preloader from "@/components/preloader/Preloader";
+import TransitionProvider from "@/providers/transition-provider";
 
 export const metadata: Metadata = {
   title: "Kobe Tio — Design Engineer",
@@ -15,8 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Preloader />
+        <TransitionProvider>
           {children}
+        </TransitionProvider>
       </body>
     </html>
   );
