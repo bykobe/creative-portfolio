@@ -8,11 +8,11 @@ import gsap from "gsap";
 // ── Tweakables ──────────────────────────────────────────────────────────────
 const PIXEL_SIZE = 16; // chunkiness of the pixel grid (lower = finer)
 const BLOB_COLOR = "#0000FF";
-const LEAVE_DURATION = 1.1; // blobs grow and cover the page
+const LEAVE_DURATION = 1.2; // blobs grow and cover the page
 const ENTER_DURATION = 1.1; // the curtain swipes up to reveal the new page
 const EASE = "power1.inOut";
 const BASE_THRESHOLD = 14000; // metaball threshold at rest; falls as progress rises
-const FULL_COVER_AT = 0.92; // past this progress, skip the field and fill the screen
+const FULL_COVER_AT = 1; // past this progress, skip the field and fill the screen
 
 interface Blob {
   x: number;

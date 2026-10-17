@@ -6,10 +6,8 @@ import "lenis/dist/lenis.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
-import NoiseModule from "@/components/ui/NoiseModule";
 import BackgroundMusic from "@/providers/background-music";
 import GlobalClickSound from "@/components/GlobalClickSound";
-import TransitionProvider from "@/providers/transition-provider";
 import Preloader from "@/components/preloader/Preloader";
 import { bootState } from "@/providers/boot-state";
 
@@ -21,7 +19,7 @@ export default function CreativeLayout({
   return (
     <>
       {!bootState.visitedCorporate && <Preloader />}
-      <NoiseModule />
+    {/*  <NoiseModule /> */}
       <BackgroundMusic>
         <GlobalClickSound />
         <SmoothScroll>

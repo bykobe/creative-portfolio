@@ -2,8 +2,6 @@
 
 import styles from "../../styles/main.module.css";
 import Hero from "@/components/sections/Hero";
-import Spotlight from "@/components/sections/Spotlight";
-import About from "@/components/sections/About";
 import CaseStudies from "@/components/sections/Projects";
 import ImpressiveMoments from "@/components/sections/ImpressiveMoments";
 import Inspo from "@/components/sections/Inspo";
@@ -11,6 +9,7 @@ import CallToAction from "@/components/sections/CallToAction";
 import LandingGate, { LandingGateStyles } from "@/components/LandingGate";
 import HeroTransition from "@/components/HeroTransition";
 import ThreeCanvas from "@/components/ThreeCanvas";
+import Showreel from "@/components/sections/Showreel";
 
 export default function Home() {
   return (
@@ -21,8 +20,7 @@ export default function Home() {
         <HeroTransition />
         <LandingGate>
           <Hero />
-          <Spotlight />
-          <About />
+          <Showreel />
           <CaseStudies />
           <ImpressiveMoments />
           <Inspo />

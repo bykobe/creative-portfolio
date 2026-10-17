@@ -256,4 +256,6 @@ const music: { img: string, alt: string, audio: string }[] = [
   },
 ]
 
-export {music, experience,navigation, kobe, case_studies, wonky1, wonky2, wonky3, wonky4, wonky5, wonky6,ASTERISK, E_GLYPH, G_GLYPH, H_GLYPH, K_GLYPH, L_GLYPH, O_GLYPH, R_GLYPH, S_GLYPH, T_GLYPH, W_GLYPH, inspo1, inspo2, inspo3, inspo4, contact}
+const showreel = "/video/trial-reel2.mp4";
+
+export {showreel, music, experience,navigation, kobe, case_studies, wonky1, wonky2, wonky3, wonky4, wonky5, wonky6,ASTERISK, E_GLYPH, G_GLYPH, H_GLYPH, K_GLYPH, L_GLYPH, O_GLYPH, R_GLYPH, S_GLYPH, T_GLYPH, W_GLYPH, inspo1, inspo2, inspo3, inspo4, contact}

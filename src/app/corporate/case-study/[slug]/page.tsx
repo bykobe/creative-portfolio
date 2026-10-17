@@ -8,6 +8,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound, useParams } from "next/navigation";
 import styles from "./slug.module.css";
+import { Lenis } from "lenis/react";
 
 /* ------------------------------------------------------------------ data */
 
@@ -155,7 +156,7 @@ export default function CaseStudyPage() {
   if (!study) notFound();
 
   return (
-    <main className={styles.case_main}>
+      <main className={styles.case_main}>
       {/* the four vertical grid lines, drawn over everything (they cross the image too) */}
       <div className={styles.case_bg} aria-hidden="true">
         <div />
@@ -229,6 +230,6 @@ export default function CaseStudyPage() {
       </div>
 
       <Clock className={styles.case_clock} />
-    </main>
+      </main>
   );
 }

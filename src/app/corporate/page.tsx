@@ -137,7 +137,7 @@ export default function CorporatePage() {
             <span className={styles.corp_subline_t1}>
               I am a self-taught multi-disciplinary creative based in <span className={styles.corp_muted}>Accra.</span>
               <br />
-              Currently exploring Three.JS and Shaders
+              Currently exploring the world of Three.JS and Shaders
             </span>
             {/* prefetch off: don't pull the heavy 3D route in while someone reads the resume */}
             <Link href="/" prefetch={false} className={styles.corp_subline_nav}>

@@ -6,7 +6,6 @@
     min-height: max-content;
     height: calc(150vh + 10rem);
     width: 100%;
-    padding: var(--spacing-md) 0 0 0;
 
     .projectsBody {
       height: 100%;
