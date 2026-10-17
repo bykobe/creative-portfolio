@@ -18,7 +18,7 @@
         padding: var(--spacing-sm);
         display: flex;
         align-items: end;
-        background-color: var(--red);
+        background-color: var(--black);
 
         .about_hero_title {
             display: flex;
@@ -213,7 +213,7 @@
                     align-items: end;
 
                     .about_music_title {
-                        color: var(--pink);
+                        color: var(--swart);
                     }
                 }
 
@@ -247,7 +247,6 @@
                 position: relative;
                 width: 100%;
                 height: 100%;
-                cursor: url('/svg/drag_resized.svg'), auto;
                 overflow: hidden;
 
                 .music_wrapper {

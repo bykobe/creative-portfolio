@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { experience, music, wonky2 } from "@/components/ui/assets";
+import { experience, music, } from "@/components/ui/assets";
 import styles from "./about.module.css";
 import Image from "next/image";
 import gsap from "gsap";
 import Draggable from "gsap/Draggable";
 import { InertiaPlugin } from "gsap/InertiaPlugin";
-import CTA from "@/components/ui/CallToAction";
+import CallToAction from "@/components/sections/CallToAction";
 
 // Register Draggable (InertiaPlugin is recommended if using GSAP Club for flick-drag)
 gsap.registerPlugin(Draggable);
@@ -124,7 +124,8 @@ export default function MyJourney() {
             <div className={styles.about_music_cont}>
               <div className={styles.about_music_tw}>
                 <h1 className={`heading2 ${styles.about_music_title}`}>Music Taste</h1>
-              </div>
+                </div>
+                {/*
               <div className={styles.about_music_iw}>
                 <div className={styles.about_info_tag}>
                   <span style={{ fontStyle: "italic" }} className="paragraph4">(i)</span>
@@ -134,7 +135,8 @@ export default function MyJourney() {
                     Another thing about myself is that I am a music lover. I don’t have a specific taste for music, I just enjoy the art and beauty in music. These are my top 3 for now, I really mess with these. If you catch me wearing Headphones, 9 times out of 10, I am listening to music.
                   </p>
                 </div>
-              </div>
+                </div>
+                */}
             </div>
 
             <div ref={galleryRef} id="music_gallery" className={styles.about_music_gallery}>
@@ -146,12 +148,7 @@ export default function MyJourney() {
             </div>
             </div>
 
-            <div className={styles.about_cta}>
-              <div className={styles.about_cta_title}>
-                <CTA />
-              </div>
-              <Image fill src={wonky2} alt="" className={styles.about_cta_img} />
-            </div>
+            <CallToAction />
         </div>
       </div>
       </div>

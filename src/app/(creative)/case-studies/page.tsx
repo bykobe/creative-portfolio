@@ -3,6 +3,7 @@ import Image from "next/image";
 import ButtonLink from "@/components/ui/ButtonLink";
 import { case_studies, wonky6 } from "@/components/ui/assets";
 import CTA from "@/components/ui/CallToAction";
+import CallToAction from "@/components/sections/CallToAction";
 
 export default function Projects() {
   return (
@@ -43,12 +44,7 @@ export default function Projects() {
           </article>
         ))}
 
-        <div className={styles.cs_cta}>
-          <Image className={styles.cs_cta_bg} src={wonky6} width={1000} height={1000} alt="background" />
-          <ButtonLink className={styles.cs_cta_link} href="/">
-            <CTA />
-          </ButtonLink>
-        </div>
+        <CallToAction />
       </div>
     </section>
   );
