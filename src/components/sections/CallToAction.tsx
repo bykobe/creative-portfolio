@@ -1,6 +1,7 @@
 import styles from "./CallToAction.module.css";
 import CTA from "../ui/CallToAction";
 import ButtonLink from "../ui/ButtonLink";
+import CapsuleScene from "./CapsuleScene";
 
 // 18 green bars sit on 35 equal columns (bar, gap, bar, gap, ...). The outer two bars on each side
 // run the full height; the 14 in between are only a cap at the top and a cap at the bottom.
@@ -27,7 +28,7 @@ export default function CallToAction() {
           <CTA />
         </ButtonLink>
       </section>
-      <div className={styles.cta_dsn_wrapper}></div>
+      <CapsuleScene />
     </>
   );
 }

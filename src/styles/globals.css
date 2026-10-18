@@ -109,10 +109,6 @@ svg {
     height: auto;
 }
 
-img, svg, text, button {
-    z-index: 4;
-}
-
 /* --- PRE-DEFINED TYPOGRAPHY STYLES --- */
 
 .display {

@@ -32,7 +32,7 @@ export default function CTA() {
     if (!svg) return;
 
     // Reset back to black when leaving (or keep the random color if you prefer!)
-    svg.style.setProperty("--glyph-color", "var(--black)");
+    svg.style.setProperty("--glyph-color", "var(--swart)");
   };
 
   return (

@@ -4,7 +4,7 @@
     right: 0;
     width: 100%;
     z-index: 1000;
-    padding: var(--spacing-sm) var(--spacing-sm) 0 0;
+    padding: 10px 10px 0 0;
 
     .headerNav {
         height: fit-content;
@@ -15,16 +15,19 @@
         z-index: 100;
         display: flex;
         align-items: center;
-        gap: calc(var(--spacing-sm) - 0.8rem);
+        gap: calc(var(--spacing-sm) - 1rem);
 
         .menuBtn {
-            height: fit-content;
+            height: 42px;
             width: fit-content;
-            padding: calc(var(--spacing-sm) - 0.9rem) calc(var(--spacing-sm) - 0.5rem);
+            padding: 5px;
             font-size: var(--paragraph-1);
-            border-radius: 4px;
             background-color: var(--swart);
             color: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0;
             border: none;
             cursor: pointer;
             position: relative;
@@ -38,27 +41,9 @@
 
         .menuBtn::before,
         .menuBtn::after {
-            content: '';
-            position: absolute;
-            border: 4px dashed var(--black);
-            border-radius: 4px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
+            content: none;
         }
 
-        .menuBtn::before {
-            inset: 0px 0px 0px 0px;
-        }
-
-        .menuBtn::after {
-            inset: 0px 0px 0px 0px;
-        }
-
-        .menuBtn:hover::before,
-        .menuBtn:hover::after {
-            opacity: 1;
-        }
 
     }
 
@@ -287,11 +272,13 @@
 }
 
 .musicToggle {
-    height: fit-content;
-    width: fit-content;
-    padding: calc(var(--spacing-sm) - 0.9rem) calc(var(--spacing-sm) - 0.5rem);
+    height: 42px;
+    width: 42px;
+    padding:  5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: var(--paragraph-5);
-    border-radius: 4px;
     background-color: var(--swart);
     color: var(--white);
     border: none;
@@ -301,26 +288,10 @@
 }
 
 .musicToggle:hover {
-    background-color: var(--green);
+    background-color: var(--blue);
     color: var(--black);
 }
 
-.musicToggle::before,
-.musicToggle::after {
-    content: '';
-    position: absolute;
-    border: 4px dashed var(--white);
-    border-radius: 4px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-    inset: 0px 0px 0px 0px;
-}
-
-.musicToggle:hover::before,
-.musicToggle:hover::after {
-    opacity: 1;
-}
 
 .webGl_wrapper {
             z-index: 10000;

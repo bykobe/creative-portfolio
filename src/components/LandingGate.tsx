@@ -22,5 +22,5 @@ export function LandingGateStyles() {
 }
 
 export default function LandingGate({ children }: { children: ReactNode }) {
-  return <div data-landing-gate="">{children}</div>;
+  return <div style={{zIndex: "5000" }} data-landing-gate="">{children}</div>;
 }

@@ -1,10 +1,6 @@
 export default function HeadphonesSVG() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="Music-Headphones-Human--Streamline-Pixel" height="32" width="32">
-      <desc>
-        Music Headphones Human Streamline Icon: https://streamlinehq.com
-      </desc>
-      <title>Toggle Music</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"  height="5" width="5">
       <g>
         <path style={{mixBlendMode: "difference"}} d="M29.715 12.955h1.52v6.09h-1.52Z" fill="#FFFFFF" strokeWidth="1"></path>
         <path style={{mixBlendMode: "difference"}} d="m9.905 12.955 1.52 0 0 -1.53 1.53 0 0 -1.52 6.09 0 0 1.52 1.53 0 0 -1.52 4.57 0 0 1.52 1.52 0 0 12.19 1.53 0 0 -3.04 1.52 0 0 -1.53 -1.52 0 0 -6.09 1.52 0 0 -1.53 -1.52 0 0 -6.09 -1.53 0 0 1.52 -1.52 0 0 -1.52 -3.05 0 0 -1.53 -10.67 0 0 1.53 -1.52 0 0 1.52 -1.52 0 0 3.05 -1.53 0 0 -4.57 -1.52 0 0 4.57 -1.52 0 0 1.52 6.09 0 0 1.53z" fill="#FFFFFF" strokeWidth="1"></path>
