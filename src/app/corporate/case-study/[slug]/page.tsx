@@ -8,7 +8,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound, useParams } from "next/navigation";
 import styles from "./slug.module.css";
-import { Lenis } from "lenis/react";
 
 /* ------------------------------------------------------------------ data */
 
@@ -26,8 +25,6 @@ type Study = {
   credits: { label: string; value: string }[];
 };
 
-const COMING_SOON: Part[][] = [[ "Case study coming soon." ]]; // placeholder until you write it
-
 const STUDIES: Study[] = [
   {
     slug: "juiced",
@@ -40,19 +37,13 @@ const STUDIES: Study[] = [
       ],
       [
         "It co-relates to how I came about this portfolio because I drew a lot of inspiration from their ",
-        { text: "PimPan Case Study", href: "https://pureemaison.com/cas-clients/pimpan-branding/" }, // TODO: real link
+        { text: "PimPan Case Study", href: "https://pureemaison.com/cas-clients/pimpan-branding/" },
         " with regards to the art direction I decided to flow with.",
-      ],
-      [
-        "That coupled with some creative magazines, and of-course Cartoons I watched as a kid helped inspire the branding process and Art Direction",
       ],
     ],
     process: [
       [
         "Moodboarding: During this phase I collected a lot of imagery, illustrations, and browsed through countless font libraries to create the perfect moodboard for the client.",
-      ],
-      [
-        "Brand Identity: After gathering the moodboard and creating a new visual direction for this local juice brand. I had to convert them from your typical juice brand with no specific direction and a general vibe to it into a fully realized brand with real world mock-ups showcasing their Identity.",
       ],
     ],
     credits: [
@@ -61,27 +52,101 @@ const STUDIES: Study[] = [
       { label: "Client", value: "JUICED" },
     ],
   },
-  // The rest are placeholders: fill in the text, credits and image the same way as JUICED.
-  ...[
-    { slug: "cresta", title: "Cresta",image: "/images/cresta1.webp", client: "Cresta" },
-    { slug: "phillys", title: "PHILLY'S", client: "PHILLY'S" },
-    { slug: "stillz", title: "Stillz.co", client: "Stillz.co" },
-    { slug: "stayr", title: "STAYR Inc.", client: "STAYR Inc." },
-  ].map(
-    ({ slug, title, client }): Study => ({
-      slug,
-      title,
-      image: `/case-studies/${slug}/hero.jpg`,
-      imageAlt: `${title} case study`,
-      inspiration: COMING_SOON,
-      process: COMING_SOON,
-      credits: [
-        { label: "Studio", value: "ARCHIVE STUDIOS" },
-        { label: "Creative Lead", value: "Kobe Tio" },
-        { label: "Clients", value: client },
+
+  // --- CRESTA ---
+  {
+    slug: "cresta",
+    title: "Cresta",
+    image: "/images/cresta1.webp", // Ensure this image exists in your public folder
+    imageAlt: "Cresta brand presentation and mockups",
+    inspiration: [
+      [
+        "Cresta required a sleek, minimalist approach. The inspiration came from Swiss graphic design principles, focusing on clean grid systems and heavy typographic hierarchy.",
       ],
-    }),
-  ),
+    ],
+    process: [
+      [
+        "Research & Wireframing: Analyzed competitors in the fintech space to locate a distinct visual gap.",
+      ],
+      [
+        "Execution: Developed a restrained color palette paired with high-contrast type scales to project institutional trust and modern edge.",
+      ],
+    ],
+    credits: [
+      { label: "Studio", value: "ARCHIVE STUDIOS" },
+      { label: "Creative Lead", value: "Kobe Tio" },
+      { label: "Client", value: "Cresta" },
+    ],
+  },
+
+  // --- PHILLY'S ---
+  {
+    slug: "phillys",
+    title: "PHILLY'S",
+    image: "/images/phillys-3.webp", // Update to your actual image path
+    imageAlt: "PHILLY'S identity and packaging design",
+    inspiration: [
+      [
+        "Drawing heavy cues from vintage street culture and retro diner signage, PHILLY'S needed to feel authentic, warm, and aggressively approachable.",
+      ],
+    ],
+    process: [
+      [
+        "Custom Lettering: Hand-sketched logotype explorations before digitizing and vectorizing final glyph structures.",
+      ],
+    ],
+    credits: [
+      { label: "Studio", value: "ARCHIVE STUDIOS" },
+      { label: "Creative Lead", value: "Kobe Tio" },
+      { label: "Client", value: "PHILLY'S" },
+    ],
+  },
+
+  // --- STILLZ.CO ---
+  {
+    slug: "stillz",
+    title: "Stillz.co",
+    image: "/images/kamanga3.jpg",
+    imageAlt: "Stillz.co digital gallery layout",
+    inspiration: [
+      [
+        "Inspired by editorial photography layouts and dark-mode immersive web environments that let the imagery do 100% of the talking.",
+      ],
+    ],
+    process: [
+      [
+        "Art Direction: Curating strict whitespace rules and subtle border layouts to frame high-end photography assets.",
+      ],
+    ],
+    credits: [
+      { label: "Studio", value: "ARCHIVE STUDIOS" },
+      { label: "Creative Lead", value: "Kobe Tio" },
+      { label: "Client", value: "Stillz.co" },
+    ],
+  },
+
+  // --- STAYR INC. ---
+  {
+    slug: "stayr",
+    title: "STAYR Inc.",
+    image: "/images/stayr1.jpg", // Update to your actual image path
+    imageAlt: "STAYR Inc. property platform UI mockups",
+    inspiration: [
+      [
+        "Hospitality platforms require warmth paired with absolute UI clarity. Inspiration was pulled from boutique travel publications and modern prop-tech interfaces.",
+      ],
+    ],
+    process: [
+      [
+        "Design System: Built a modular component ecosystem ensuring seamless transition from mobile views to desktop viewports.",
+      ],
+    ],
+    credits: [
+      { label: "Studio", value: "ARCHIVE STUDIOS" },
+      { label: "Creative Lead", value: "Kobe Tio" },
+      { label: "Client", value: "STAYR Inc." },
+    ],
+  },
 ];
 
 /* ----------------------------------------------------------------- clock */

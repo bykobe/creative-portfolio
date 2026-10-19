@@ -52,9 +52,9 @@
                         justify-content: start;
                         align-items: start;
                         padding: 0;
-                        color: var(--blue);
+                        color: var(--cyan);
                       font-size: var(--paragraph-3);
-                      text-decoration: underline dotted 2px var(--blue);
+                      text-decoration: underline dotted 2px var(--cyan);
 
                       /* Opt out of .btn's dashed hover outline */
                       &::before,

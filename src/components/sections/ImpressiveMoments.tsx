@@ -17,7 +17,7 @@ export default function ImpressiveMoments() {
 
           <div className={styles.im_desc_wrapper}>
             <p className={`paragraph1 ${styles.im_desc}`}>
-            Along the way: featured on Figma Community, invited to speak at a design thing, and once accidentally made a typeface that looked like pasta. My work has shown up in zines, mockups, sticker-covered laptops, and one Berlin subway ad (true story). Small wins, big joy.
+              I&apos;ve always been a creative. Even as a kid I used to enjoying drawing and also messing with technology. It got me into a lot of trouble but I think it&apos;s part of who I am meant to be. I come from a family of creatives so I guess it runs in the blood, my grandma was an artist so that&apos;s where I get my artsy skills from.
             </p>
             <ButtonLink href="/my-journey" className={styles.im_btn}>
               Read more

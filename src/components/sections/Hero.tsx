@@ -11,9 +11,9 @@ export default function Hero() {
           </div>
           <div className={styles.heroContent}>
           <div className={styles.heroDesc}>
-            <p className={styles.heroDescText}>Art direction meets collage chaos.
-              I design bold, layered identities
-              with personality.</p>
+              <p className={styles.heroDescText}>
+                Welcome to my chaotic yet creative world.
+              I design cool sh*t with personality.</p>
           </div>
           <div className={styles.scrollIndicator}>
             <span>Scroll down</span>
