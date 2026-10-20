@@ -8,6 +8,7 @@ import gsap from "gsap";
 import Draggable from "gsap/Draggable";
 import { InertiaPlugin } from "gsap/InertiaPlugin";
 import CallToAction from "@/components/sections/CallToAction";
+import ClipText from "@/components/ui/ClipText";
 
 // Register Draggable (InertiaPlugin is recommended if using GSAP Club for flick-drag)
 gsap.registerPlugin(Draggable);
@@ -61,7 +62,9 @@ export default function MyJourney() {
       <div className={styles.about_body}>
         <div className={styles.about_hero}>
           <div className={styles.about_hero_title}>
-            <h1 className="heading1">About me</h1>
+
+                <ClipText as="h1" on="load" delay={0.5} ease="power1.inOut" className="heading1">About me</ClipText>
+
           </div>
         </div>
         <div className={styles.about_content}>
@@ -74,16 +77,16 @@ export default function MyJourney() {
             </div>
 
             <div className={styles.about_bio_body}>
-              <p className="paragraph1">
+              <ClipText as="p" on="load" delay={0.5} ease="power1.inOut" className="paragraph1">
                 Hi, I&apos;m Kobe Tio. I love making work that&apos;s as fun to look at as it is to scroll past twice.
                 I believe in design with fingerprints—wonky edges, saturated chaos, and unexpected texture.
                 My world is built with layered type, tangled color palettes, and layouts that like to interrupt themselves.
-              </p>
-              <p className="paragraph1">
+              </ClipText>
+              <ClipText as="p" on="scroll" start="top 65%" ease="power1.inOut" className="paragraph1">
                 I play in the space between order and glitch—where things loop, blur, and burst.
                 Sometimes it&apos;s brand identity, sometimes editorial, sometimes just a visual dare.
                 Whether it&apos;s a name tag or a system aesthetic, I like making things that smile back at you.
-              </p>
+              </ClipText>
             </div>
           </article>
 

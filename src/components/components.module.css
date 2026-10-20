@@ -30,12 +30,17 @@
             border: none;
             cursor: pointer;
             position: relative;
-            transition: background-color 0.3s ease;
+            /* the hover colour is a layer that grows up from the bottom edge */
+            background-image: linear-gradient(var(--lime), var(--lime));
+            background-repeat: no-repeat;
+            background-position: bottom;
+            background-size: 100% 0%;
+            transition: background-size 0.45s cubic-bezier(0.76, 0, 0.24, 1), color 0.3s ease 0.1s;
         }
 
         .menuBtn:hover {
-            background-color: var(--lime);
-            color: var(--black);
+           color: var(--swart);
+            background-size: 100% 101%; /* 101% so no hairline of the old colour is left at the top */
         }
 
         .menuBtn::before,
@@ -284,11 +289,16 @@
     border-radius: 1000px;
     cursor: pointer;
     position: relative;
-    transition: background-color 0.3s ease;
+    /* the hover colour is a layer that grows up from the bottom edge */
+    background-image: linear-gradient(var(--blue), var(--blue));
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: 100% 0%;
+    transition: background-size 0.45s cubic-bezier(0.76, 0, 0.24, 1), color 0.3s ease 0.1s;
 }
 
 .musicToggle:hover {
-    background-color: var(--blue);
+    background-size: 100% 101%;
     color: var(--black);
 }
 

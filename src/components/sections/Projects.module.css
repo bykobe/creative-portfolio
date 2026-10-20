@@ -92,11 +92,21 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            border-radius: 42px;
+            border-radius: 4200px;
             background-color: var(--swart);
+            background-image: linear-gradient(var(--red), var(--red));
+            background-repeat: no-repeat;
+            background-position: bottom;
+            background-size: 100% 0%;
+            transition: background-size 0.45s cubic-bezier(0.76, 0, 0.24, 1), color 0.3s ease 0.1s;
             /* Drives both the span text and the dashed edge (via currentColor) */
             color: var(--white);
-            --btn-edge-width: 8px;
+            --btn-edge-width: 12px;
+
+            &:hover {
+               background-size: 100% 101%;
+               color: var(--white); /* optional: flip the text/edge colour as the red fills in */
+             }
 
             & span {
                 text-decoration: underline dotted 6px;

@@ -130,6 +130,18 @@
     }
 }
 
+/* Hidden until the script has split the lines and clipped them away, so the finished text never
+   flashes before it animates. Without JavaScript it simply shows. */
+.clip {
+  visibility: hidden;
+}
+
+@media (scripting: none) {
+  .clip {
+    visibility: visible;
+  }
+}
+
 /* On-axis continuous rotation animation for the asterisk */
 @keyframes windmillSpin {
     from {

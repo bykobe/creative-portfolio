@@ -1,5 +1,6 @@
 import NameMark from '../ui/svgs/NameMark'
 import styles from './Hero.module.css'
+import ClipText from '../ui/ClipText'
 
 export default function Hero() {
   return (
@@ -11,12 +12,13 @@ export default function Hero() {
           </div>
           <div className={styles.heroContent}>
           <div className={styles.heroDesc}>
-              <p className={styles.heroDescText}>
+              <ClipText as="p" on="load" delay={0.4} className={styles.heroDescText}>
                 Welcome to my chaotic yet creative world.
-              I design cool sh*t with personality.</p>
+                I design cool sh*t with personality.
+              </ClipText>
           </div>
           <div className={styles.scrollIndicator}>
-            <span>Scroll down</span>
+            <ClipText as="span" on="load" delay={0.43}>Scroll down</ClipText>
             </div>
           </div>
 
