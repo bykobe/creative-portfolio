@@ -1,118 +1,156 @@
-/* ==========================================
-   Projects Grid (min-width: 1280px)
-   ========================================== */
+/* Projects: mobile first. Base rules are for phones; each media query adds to them.
+   Phones   < 700px    one column, tiles stacked, 4:3 images
+   Tablet   700px+     two columns
+   Desktop  1280px+    your original 12-col / 17-row grid                              */
+
+/* ---------- phones (base) ---------- */
+.projectsWrapper {
+  width: 100%;
+}
+
+.projectsBody {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.projectItem {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  &:hover {
+    color: var(--blue);
+  }
+}
+
+.pi_img_wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
+.pi_cnt_wrapper {
+  padding: var(--spacing-sm) 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--spacing-sm);
+  border-bottom: 1px solid var(--grey);
+}
+
+.pi_title {
+  margin: 0;
+  font-family: var(--lisu-bosa-font);
+  font-size: 18px;
+}
+
+.projectsBtnWrapper {
+  width: 100%;
+  height: clamp(6rem, 22vw, 9rem);
+  position: relative;
+  overflow: hidden;
+  background-color: var(--blue);
+}
+
+.projectsBtn {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-radius: 4200px;
+  background-color: var(--swart);
+  background-image: linear-gradient(var(--red), var(--red));
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: 100% 0%;
+  transition: background-size 0.45s cubic-bezier(0.76, 0, 0.24, 1), color 0.3s ease 0.1s;
+  /* Drives both the span text and the dashed edge (via currentColor) */
+  color: var(--white);
+  --btn-edge-width: 12px;
+
+  &:hover {
+    background-size: 100% 101%;
+    color: var(--white);
+  }
+
+  & span {
+    text-decoration: underline dotted 6px;
+  }
+}
+
+/* touch screens have no hover, so don't leave the fill stuck after a tap */
+@media (hover: none) {
+  .projectItem:hover {
+    color: inherit;
+  }
+  .projectsBtn:hover {
+    background-size: 100% 0%;
+  }
+}
+
+/* ---------- tablet: 700px and up ---------- */
+@media (min-width: 700px) {
+  .projectsBody {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pi_cnt_wrapper {
+    border-bottom: 0;
+    border-right: 1px solid var(--grey);
+  }
+
+  .projectsBtnWrapper {
+    grid-column: 1 / -1;
+    height: clamp(7rem, 16vw, 11rem);
+  }
+}
+
+/* ---------- desktop: 1280px and up (your original layout) ---------- */
 @media (min-width: 1280px) {
   .projectsWrapper {
     min-height: max-content;
     height: calc(170vh + 10rem);
-    width: 100%;
+  }
 
-    .projectsBody {
-      height: 100%;
-      width: 100%;
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      grid-template-rows: repeat(17, 1fr);
+  .projectsBody {
+    height: 100%;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(17, 1fr);
+  }
 
-      .projectItem {
-        display: grid;
-        grid-template-rows: repeat(7, 1fr);
-        overflow: hidden;
+  .projectItem {
+    display: grid;
+    grid-template-rows: repeat(7, 1fr);
+  }
 
-        &:hover {
-            color: var(--blue);
-        }
+  .pi_img_wrapper {
+    grid-row: 1 / span 6;
+    aspect-ratio: auto; /* the grid rows set the height here */
+  }
 
-        .pi_img_wrapper {
-          grid-row: 1 / span 6;
-          position: relative;
-          overflow: hidden;
+  .pi_cnt_wrapper {
+    grid-row: 7 / span 1;
+  }
 
+  /* Placement per tile */
+  .projectItem:nth-child(1) { grid-column: 1 / span 6; grid-row: 1 / span 7; }
+  .projectItem:nth-child(2) { grid-column: 7 / span 6; grid-row: 1 / span 7; }
+  .projectItem:nth-child(3) { grid-column: 1 / span 6; grid-row: 8 / span 7; }
+  .projectItem:nth-child(4) { grid-column: 7 / span 6; grid-row: 8 / span 7; }
 
-
-          img {
-            object-fit: cover;
-            object-position: center;
-
-          }
-
-
-        }
-
-        .pi_cnt_wrapper {
-          grid-row: 7 / span 1;
-          padding: var(--spacing-sm) 10px;
-          display: flex;
-          justify-content: space-between;
-          align-items: end;
-          gap: var(--spacing-sm);
-          border-right: 1px solid var(--grey);
-
-          .pi_title {
-            margin: 0;
-            font-family: var(--lisu-bosa-font);
-            font-size: 18px;
-          }
-        }
-      }
-
-      /* Placement + accent colour per tile */
-      .projectItem:nth-child(1) {
-        grid-column: 1 / span 6;
-        grid-row: 1 / span 7;
-      }
-
-      .projectItem:nth-child(2) {
-        grid-column: 7 / span 6;
-        grid-row: 1 / span 7;
-      }
-
-      .projectItem:nth-child(3) {
-        grid-column: 1 / span 6;
-        grid-row: 8 / span 7;
-      }
-
-      .projectItem:nth-child(4) {
-        grid-column: 7 / span 6;
-        grid-row: 8 / span 7;
-      }
-
-      .projectsBtnWrapper {
-          grid-column: 1 / span 12;
-          grid-row: 15 / span 3;
-          width: 100%;
-          height: 100%;
-          position: relative;
-          overflow: hidden;
-          background-color: var(--blue);
-
-          .projectsBtn {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 4200px;
-            background-color: var(--swart);
-            background-image: linear-gradient(var(--red), var(--red));
-            background-repeat: no-repeat;
-            background-position: bottom;
-            background-size: 100% 0%;
-            transition: background-size 0.45s cubic-bezier(0.76, 0, 0.24, 1), color 0.3s ease 0.1s;
-            /* Drives both the span text and the dashed edge (via currentColor) */
-            color: var(--white);
-            --btn-edge-width: 12px;
-
-            &:hover {
-               background-size: 100% 101%;
-               color: var(--white); /* optional: flip the text/edge colour as the red fills in */
-             }
-
-            & span {
-                text-decoration: underline dotted 6px;
-            }
-          }
-      }
-    }
+  .projectsBtnWrapper {
+    grid-column: 1 / span 12;
+    grid-row: 15 / span 3;
+    height: 100%;
   }
 }
