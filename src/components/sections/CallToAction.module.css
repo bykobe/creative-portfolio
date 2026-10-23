@@ -1,6 +1,8 @@
 /* ---------- background: pale-blue sky with green bars ----------
    Tweak these three to restyle it. */
 .cta_wrapper {
+    position: relative;
+    width: 100%;
   --cta-sky: var(--cta-sky-color, #dae8ff);
   --cta-green: var(--green, #029902);
   --cta-cap: 20.83%; /* height of the top and bottom caps on the middle bars */
@@ -75,6 +77,11 @@
       text-decoration: underline dotted 8px var(--blue);
       font-size: var(--heading-2);
       background: none;
+
+      & span {
+          position: relative;
+          width: 100%;
+      }
 
       &::before,
       &::after {

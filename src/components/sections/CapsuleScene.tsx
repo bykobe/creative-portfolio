@@ -1,6 +1,8 @@
 "use client";
 
 // src/components/sections/CapsuleScene.tsx
+// A Matter.js box of flat, chunky pill buttons plus round icon buttons (a leopard chat bubble and a
+// mail envelope), in a soft pastel palette with tight, heavy type. Same physics as before.
 // A Matter.js box of chunky capsule buttons. Nothing runs (and matter-js isn't even downloaded)
 // until the top of the box reaches the middle of the screen; then the buttons pour in from the
 // top edge, land, pile up, and can be dragged around with the mouse. Buttons with an `href`
@@ -11,36 +13,36 @@ import styles from "./CallToAction.module.css";
 
 // ── Tweakables ──────────────────────────────────────────────────────────────────────────────
 // One button is made per entry. Add `href` to make it clickable.
-const BUTTONS: { label: string; href?: string }[] = [
+// `icon` makes it a round icon button instead of a text pill.
+const BUTTONS: { label: string; href?: string; icon?: "chat" | "mail" }[] = [
+  { label: "", icon: "chat", href: "mailto:hi@bykobe.dev" },
+  { label: "", icon: "mail", href: "mailto:hi@bykobe.dev" },
   { label: "Say hiii", href: "mailto:hi@bykobe.dev" },
   { label: "Let’s chat", href: "mailto:hi@bykobe.dev" },
   { label: "Send a message", href: "mailto:hi@bykobe.dev" },
+  { label: "Reach out", href: "mailto:hi@bykobe.dev" },
   { label: "Design Engineer" },
-  { label: "Three.js" },
-  { label: "Next.js" },
-  { label: "GSAP" },
-  { label: "Shaders" },
-  { label: "Accra" },
   { label: "Open to work" },
-  { label: "Say hello" },
-  { label: "Figma" },
-  { label: "Creative dev" },
-  { label: "hi@bykobe.dev", href: "mailto:hi@bykobe.dev" },
+  { label: "Say hello", href: "mailto:hi@bykobe.dev" },
 ];
+// Flat pastel pills with a darker ink for the text, like the reference
 const COLORS = [
-  { bg: "#1c3fd0", fg: "#ffffff" },
-  { bg: "#029902", fg: "#ffffff" },
-  { bg: "#ffbe1a", fg: "#111111" },
-  { bg: "#ff3b00", fg: "#ffffff" },
-  { bg: "#ff8fc7", fg: "#111111" },
-  { bg: "#ffffff", fg: "#111111" },
+  { bg: "#b9d68f", fg: "#1c2a12" }, // sage green
+  { bg: "#f2d95c", fg: "#1a1608" }, // butter yellow
+  { bg: "#6b1118", fg: "#fbe9e4" }, // oxblood
+  { bg: "#c1285f", fg: "#f7c6df" }, // raspberry
+  { bg: "#98dcdc", fg: "#10282a" }, // aqua
 ];
-const INK = "#111111"; //        outline + the thick bottom edge
-const LIP = 6; //                px of "button thickness" under the face
+const ICON_STYLE = {
+  chat: { bg: "#d29a4a", fg: "#ffffff" }, // leopard print, drawn in code
+  mail: { bg: "#98dcdc", fg: "#161616" },
+};
+const FACE_MIN = 60; //          pill height range in px (scales with the box width in between)
+const FACE_MAX = 100;
 const SPAWN_EVERY_MS = 160; //   gap between each one dropping in
 const START_AT = "50%"; //       the box starts when its top edge reaches this much of the screen height
 
-type Btn = { w: number; h: number; face: number; bg: string; fg: string; label: string; fs: number; href?: string };
+type Btn = { w: number; h: number; bg: string; fg: string; label: string; fs: number; href?: string; icon?: "chat" | "mail" };
 
 export default function CapsuleScene() {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -95,6 +97,37 @@ export default function CapsuleScene() {
       fit();
       buildWalls();
 
+      // ── leopard print for the chat button: tan ground with ragged dark rosettes ──────────────────
+      const leopard = document.createElement("canvas");
+      leopard.width = leopard.height = 256;
+      {
+        const g = leopard.getContext("2d")!;
+        g.fillStyle = "#d29a4a";
+        g.fillRect(0, 0, 256, 256);
+        for (let i = 0; i < 34; i++) {
+          const x = Math.random() * 256, y = Math.random() * 256, r = 10 + Math.random() * 8;
+          g.fillStyle = "#b87a30";
+          g.beginPath();
+          g.ellipse(x, y, r * 0.8, r * 0.7, Math.random() * 3, 0, 7);
+          g.fill();
+          g.fillStyle = "#2b1608";
+          const n = 5 + Math.floor(Math.random() * 3);
+          const open = Math.random() * 6.28;
+          for (let k = 0; k < n; k++) {
+            const a = open + 0.9 + (k / (n - 1)) * (6.28 - 1.8);
+            g.beginPath();
+            g.ellipse(x + Math.cos(a) * r * 1.05, y + Math.sin(a) * r * 1.05, r * 0.38, r * 0.3, a, 0, 7);
+            g.fill();
+          }
+        }
+      }
+
+      // heavy, tightly-spaced type (letterSpacing is skipped where the browser lacks it)
+      const setType = (fs: number) => {
+        ctx.font = `700 ${fs}px ${fontFamily}`;
+        if ("letterSpacing" in ctx) (ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = `${-fs * 0.02}px`;
+      };
+
       // ── buttons ────────────────────────────────────────────────────────────────────────────
       const bodies: Matter.Body[] = [];
       const info = (b: Matter.Body) => b.plugin.btn as Btn;
@@ -108,64 +141,95 @@ export default function CapsuleScene() {
         const color = COLORS[next % COLORS.length];
         next++;
 
-        const face = Math.max(54, Math.min(84, w * 0.052)); // chunky: tall for its text
-        const fs = face * 0.42;
-        ctx.font = `600 ${fs}px ${fontFamily}`;
-        const bw = Math.ceil(ctx.measureText(spec.label).width + face * 1.1);
-        const bh = face + LIP;
-        const btn: Btn = { w: bw, h: bh, face, bg: color.bg, fg: color.fg, label: spec.label, fs, href: spec.href };
+        const face = Math.max(FACE_MIN, Math.min(FACE_MAX, w * 0.075)); // pill height
+        const common = { restitution: 0.25, friction: 0.4, frictionAir: 0.012, density: 0.0016 };
+        const startY = y ?? -face * 1.4 - Math.random() * 100;
+        let body: Matter.Body;
 
-        const body = Bodies.rectangle(
-          bw / 2 + Math.random() * Math.max(1, w - bw),
-          y ?? -bh - Math.random() * 100,
-          bw,
-          bh,
-          {
-            chamfer: { radius: bh / 2 }, // fully rounded ends = a capsule
-            restitution: 0.25,
-            friction: 0.4,
-            frictionAir: 0.012,
-            density: 0.0016,
+        if (spec.icon) {
+          const d = face * 1.3; // icon buttons are round and a bit bigger than a pill is tall
+          const style = ICON_STYLE[spec.icon];
+          const btn: Btn = { w: d, h: d, bg: style.bg, fg: style.fg, label: "", fs: 0, href: spec.href, icon: spec.icon };
+          body = Bodies.circle(d / 2 + Math.random() * Math.max(1, w - d), startY, d / 2, {
+            ...common,
+            angle: (Math.random() - 0.5) * Math.PI,
+            plugin: { btn },
+          });
+        } else {
+          const fs = face * 0.56; // big type for the pill
+          setType(fs);
+          const bw = Math.ceil(ctx.measureText(spec.label).width + face * 0.95);
+          const btn: Btn = { w: bw, h: face, bg: color.bg, fg: color.fg, label: spec.label, fs, href: spec.href };
+          body = Bodies.rectangle(bw / 2 + Math.random() * Math.max(1, w - bw), startY, bw, face, {
+            ...common,
+            chamfer: { radius: face / 2 }, // fully rounded ends = a capsule
             angle: (Math.random() - 0.5) * Math.PI * 0.8,
             plugin: { btn },
-          },
-        );
+          });
+        }
         bodies.push(body);
         Composite.add(engine.world, body);
       };
 
       // ── drawing ────────────────────────────────────────────────────────────────────────────
+      const drawIcon = (kind: "chat" | "mail", r: number, color: string) => {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = r * 0.15;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.beginPath();
+        if (kind === "chat") {
+          const R = r * 0.42;
+          const cy = -r * 0.05;
+          ctx.arc(0, cy, R, 2.65, 1.95 + Math.PI * 2); // the long way round, leaving a gap for the tail
+          ctx.lineTo(-r * 0.42, r * 0.52);
+          ctx.closePath();
+        } else {
+          ctx.lineWidth = r * 0.12;
+          ctx.rotate(-0.14);
+          ctx.roundRect(-r * 0.46, -r * 0.31, r * 0.92, r * 0.62, r * 0.1);
+          ctx.moveTo(-r * 0.42, -r * 0.24);
+          ctx.lineTo(0, r * 0.06);
+          ctx.lineTo(r * 0.42, -r * 0.24);
+        }
+        ctx.stroke();
+      };
+
       const draw = () => {
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.clearRect(0, 0, w, h);
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.lineJoin = "round";
         for (const body of bodies) {
           const b = info(body);
           ctx.save();
           ctx.translate(body.position.x, body.position.y);
           ctx.rotate(body.angle);
 
-          const left = -b.w / 2;
-          const top = -b.h / 2;
-          // the thick bottom edge, then the face on top of it
-          ctx.fillStyle = INK;
-          ctx.beginPath();
-          ctx.roundRect(left, top + LIP, b.w, b.face, b.face / 2);
-          ctx.fill();
+          if (b.icon) {
+            const r = b.w / 2;
+            ctx.beginPath();
+            ctx.arc(0, 0, r, 0, Math.PI * 2);
+            ctx.fillStyle = b.bg;
+            ctx.fill();
+            if (b.icon === "chat") {
+              ctx.save();
+              ctx.clip();
+              ctx.drawImage(leopard, -r, -r, r * 2, r * 2);
+              ctx.restore();
+            }
+            drawIcon(b.icon, r, b.fg);
+          } else {
+            // flat pill, no outline
+            ctx.fillStyle = b.bg;
+            ctx.beginPath();
+            ctx.roundRect(-b.w / 2, -b.h / 2, b.w, b.h, b.h / 2);
+            ctx.fill();
 
-          ctx.fillStyle = b.bg;
-          ctx.strokeStyle = INK;
-          ctx.lineWidth = 3;
-          ctx.beginPath();
-          ctx.roundRect(left + 1.5, top + 1.5, b.w - 3, b.face - 3, (b.face - 3) / 2);
-          ctx.fill();
-          ctx.stroke();
-
-          ctx.fillStyle = b.fg;
-          ctx.font = `600 ${b.fs}px ${fontFamily}`;
-          ctx.fillText(b.label, 0, top + b.face / 2 + b.fs * 0.04);
+            ctx.fillStyle = b.fg;
+            setType(b.fs);
+            ctx.fillText(b.label, 0, b.fs * 0.03);
+          }
           ctx.restore();
         }
       };
