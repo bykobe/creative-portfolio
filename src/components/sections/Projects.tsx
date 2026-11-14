@@ -5,6 +5,7 @@ import { case_studies } from "../ui/assets";
 import styles from "./Projects.module.css";
 import ButtonLink from "../ui/ButtonLink";
 import Image from 'next/image';
+import { PixelMedia } from '../pixel-media/pixel-media';
 
 export default function Projects() {
 
@@ -16,6 +17,7 @@ export default function Projects() {
             <div className={styles.pi_img_wrapper}>
               {/* Underneath: the dithered version. It fills the box the same way the photo does
                   (cover), so the two line up pixel for pixel. */}
+
               <ImageDithering
                 className={styles.pi_dither}
                 width="100%"
@@ -32,12 +34,13 @@ export default function Projects() {
                 fit="cover"
               />
 
+
               {/* On top: the real photo, invisible until the card is hovered, then faded in */}
               <Image
+                fill
                 className={styles.pi_photo}
                 src={img}
                 alt={alt || title}
-                fill
                 sizes="(min-width: 1280px) 50vw, (min-width: 700px) 50vw, 100vw"
               />
             </div>

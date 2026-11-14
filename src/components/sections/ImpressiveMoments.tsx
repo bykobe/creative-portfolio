@@ -2,7 +2,6 @@
 
 import ButtonLink from "../ui/ButtonLink";
 import ClipText from "../ui/ClipText";
-import ScrollBackground from "../ui/ScrollBackground";
 
 import styles from "./ImpressiveMoments.module.css";
 
@@ -10,7 +9,6 @@ export default function ImpressiveMoments() {
 
   return (
     <section className={styles.im_wrapper} id="impressive-moments">
-      <ScrollBackground targetId="impressive-moments" at={0.4} />
       <div className={styles.im_body}>
         <div className={styles.im_content}>
           <span className={`paragraph4 ${styles.im_caption}`}>Mildly Impressive Facts</span>

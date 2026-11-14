@@ -419,6 +419,8 @@ export default function Scene() {
     controls.maxDistance = 60;
     controls.target.set(0, 1.5, 0);
     controls.enableZoom = false;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.4;
 
     // ==========================================
     // 3. LIGHTING

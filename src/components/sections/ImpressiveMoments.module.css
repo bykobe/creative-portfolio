@@ -10,6 +10,7 @@
     min-height: calc(70vh + 10rem);
     min-height: calc(70svh + 10rem);
     padding: 0 var(--spacing-sm);
+    background: #dae8ff;
 }
 
 .im_body {
@@ -57,9 +58,9 @@
     justify-content: start;
     align-items: start;
     padding: 0;
-    color: var(--cyan);
+    color: var(--blue);
     font-size: var(--paragraph-3);
-    text-decoration: underline dotted 2px var(--cyan);
+    text-decoration: underline dotted 2px var(--blue);
 
     /* Opt out of .btn's dashed hover outline */
     &::before,

@@ -136,15 +136,35 @@
 
 }
 
+/* Clip (reveal) footer.
+   .footer is an ordinary one-screen-tall box at the very end of the page. .footerSticky inside it is
+   pinned to the bottom of the screen with position: fixed, but because .footer has a clip-path, only
+   the part that falls inside the .footer box is ever drawn. So as the page scrolls up, the footer is
+   uncovered from the bottom edge of the last section instead of sliding in with it.
+   Needs: no transform/filter/will-change on any ancestor (they would turn "fixed" into "absolute"). */
 .footer {
-    height: calc(90vh + 10rem);
+    position: relative;
+    height: 100vh;
+    height: 100svh;
     width: 100%;
-    padding: var(--spacing-md) var(--spacing-sm) 0 var(--spacing-sm);
+    background: var(--blue); /* fills the box, so a parallax shift of the content never shows a gap */
+    clip-path: inset(0);
+
+    .footerSticky {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        height: 100vh;
+        height: 100svh;
+        width: 100%;
+        background: var(--blue);
+        color: var(--white);
+        padding: var(--spacing-md) var(--spacing-sm) 0 var(--spacing-sm);
+    }
 
     .footer_body {
         height: 100%;
         width: 100%;
-        overflow: hidden;
         position: relative;
         display: grid;
         grid-template-columns: repeat(12, 1fr);
@@ -162,16 +182,15 @@
             .contact_wrapper {
                 grid-column: 1 / span 3;
                 grid-row: 2 / span 3;
-                color: var(--black);
 
                 .contact_item_title {
-                    margin-bottom: var(--spacing-sm);
+                    margin-bottom: calc(var(--spacing-sm) - 15px) ;
                 }
 
                 .contact_item_group {
                     display: flex;
                     flex-direction: column;
-                    gap: 10px;
+                    gap: 2.5px;
                     width: 100%;
                     overflow: hidden;
                     list-style: none;
@@ -185,7 +204,7 @@
                         }
 
                         &:hover {
-                            color: var(--green);
+                            color: var(--red);
                             text-decoration: underline dotted 2px var(--green);
                         }
                     }
@@ -197,16 +216,15 @@
             .nav_wrapper {
                 grid-column: 5 / span 3;
                 grid-row: 2 / span 3;
-                color: var(--black);
 
                 .nav_item_title {
-                    margin-bottom: var(--spacing-sm);
+                   margin-bottom: calc(var(--spacing-sm) - 15px) ;
                 }
 
                 .nav_item_group {
                     display: flex;
                     flex-direction: column;
-                    gap: 10px;
+                    gap: 2.5px;
                     width: 100%;
                     list-style: none;
                     overflow: hidden;
@@ -220,7 +238,7 @@
                         }
 
                         &:hover {
-                            color: var(--green);
+                            color: var(--red);
                             text-decoration: underline dotted 2px var(--green);
                         }
                     }
@@ -237,7 +255,6 @@
                 display: flex;
                 flex-direction: column;
                 align-items: end;
-                color: var(--black);
             }
         }
 
@@ -247,7 +264,6 @@
             grid-row: 5 / span 1;
             display: grid;
             grid-template-columns: repeat(12, 1fr);
-            color:  var(--black);
             align-items: start;
 
             & span {
@@ -255,23 +271,41 @@
                 text-wrap: nowrap;
             }
 
-            .asterisk_container {
-                grid-column: 12 / span 1;
-                position: relative;
-
-                & svg {
-                    width: 270px;
-                    height: auto;
-                    transform-origin: center center;
-                    transform: translateY(-75%);
-                }
-            }
         }
 
         .footer_body_bs {
-            grid-column: 1 / span 12;
+            grid-column: 11 / span 2;
             grid-row: 6 / span 3;
         }
+    }
+}
+
+/* Optional polish: while the footer is being uncovered its content drifts up into place.
+   Browsers without scroll-driven animations just skip this and show the plain reveal. */
+@supports (animation-timeline: view()) {
+    .footer {
+        view-timeline: --footerReveal block;
+    }
+
+    .footer .footerSticky {
+        animation: footerParallax linear both;
+        animation-timeline: --footerReveal;
+        animation-range: entry 0% entry 100%;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .footer .footerSticky {
+            animation: none;
+        }
+    }
+}
+
+@keyframes footerParallax {
+    from {
+        transform: translateY(-18%);
+    }
+    to {
+        transform: translateY(0);
     }
 }
 

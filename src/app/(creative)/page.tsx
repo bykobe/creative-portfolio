@@ -23,11 +23,8 @@ export default function Home() {
           <Showreel />
           <CaseStudies />
           <ImpressiveMoments />
-                    <CallToAction />
-          {/*
+          <CallToAction />
           <Inspo />
-
-          */}
         </LandingGate>
       </main>
     </div>

@@ -49,6 +49,7 @@
 
 .pi_photo {
   opacity: 0;
+  object-fit: fill;
   transition: opacity 0.7s cubic-bezier(0.76, 0, 0.24, 1);
 }
 

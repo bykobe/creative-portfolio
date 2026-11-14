@@ -73,11 +73,11 @@ const WORK: Item[] = [
 ];
 
 const TOOLS: Item[] = [
-  { title: "Next JS / React JS" },
+  { title: "Next JS / React JS / Astro" },
   { title: "Typescript / Javascript" },
-  { title: "Framer Motion / GSAP" },
-  { title: "Figma" },
-  { title: "Git + GitHub" },
+  { title: "Framer Motion / GSAP / R3F / WebGL / ThreeJS" },
+  { title: "Figma / Paper / Jitter / Lottiefiles" },
+  { title: "Git + GitHub / Vercel / Sanity / Contentful" },
 ];
 
 const EXPERIENCE = [

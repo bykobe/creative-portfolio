@@ -19,12 +19,11 @@ const stayr_1 = "/images/stayr1.jpg";
 const kamanga_1 = "/images/kamanga3.jpg";
 
 
-const psychodrama = "/images/psychodrama.jpg";
-const churchill_downs = "/images/churchill-downs.jpg";
-const biking = "/images/biking.jpg";
-const star67 = "/images/star-67.jpg";
-const before_i_blow = "/images/before-i-blow.jpg";
-const amerikan_badass = "/images/amerikan-badass.jpg";
+const chtmy = "/images/chtkmy.png";
+const in_my_room = "/images/in-my-room.png";
+const scorpion = "/images/scorpion.png";
+const flower_boy = "/images/flower-boy.png";
+const amerikan_badass = "/images/a-a-badass.png";
 
 
 const E_GLYPH = () => {
@@ -120,7 +119,7 @@ const case_studies = [
     img: juiced_1,
     title: "JUICED",
     desc: "A bold identity and packaging system for a coconut water brand that refuses to sit still.",
-    link: "",
+    link: "/juiced-case-study",
     alt: "JUICED Case Study Banner",
   },
   {
@@ -225,22 +224,22 @@ const experience: { studio: string, role: string, years: string }[] = [
 
 const music: { img: string, alt: string, audio: string }[] = [
   {
-    img: biking,
+    img: in_my_room,
     alt: "",
     audio: ""
   },
   {
-    img: star67,
+    img: scorpion,
     alt: "",
     audio: ""
   },
   {
-    img: before_i_blow,
+    img: flower_boy,
     alt: "",
     audio: ""
   },
   {
-    img: churchill_downs,
+    img: chtmy,
     alt: "",
     audio: ""
   },
@@ -249,13 +248,8 @@ const music: { img: string, alt: string, audio: string }[] = [
     alt: "",
     audio: ""
   },
-  {
-    img: psychodrama,
-    alt: "",
-    audio: ""
-  },
 ]
 
-const showreel = "/video/trial-reel2.mp4";
+const showreel = "/video/spotlight-reel.mp4";
 
 export {showreel, music, experience,navigation, kobe, case_studies, wonky1, wonky2, wonky3, wonky4, wonky5, wonky6,ASTERISK, E_GLYPH, G_GLYPH, H_GLYPH, K_GLYPH, L_GLYPH, O_GLYPH, R_GLYPH, S_GLYPH, T_GLYPH, W_GLYPH, inspo1, inspo2, inspo3, inspo4, contact}

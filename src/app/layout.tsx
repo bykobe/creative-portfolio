@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import "../styles/globals.css";
 import TransitionProvider from "@/providers/transition-provider";
+import { Inter } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: "Kobe Tio — Design Engineer",
@@ -13,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={cn("font-sans", inter.variable)}>
       <body>
         <TransitionProvider>
           {children}

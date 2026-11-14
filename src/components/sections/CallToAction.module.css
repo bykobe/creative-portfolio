@@ -3,7 +3,7 @@
 .cta_wrapper {
     position: relative;
     width: 100%;
-  --cta-sky: var(--cta-sky-color, #dae8ff);
+  --cta-sky:  #dae8ff;
   --cta-green: var(--green, #029902);
   --cta-cap: 20.83%; /* height of the top and bottom caps on the middle bars */
 }
@@ -25,6 +25,7 @@
 
 .cta_bar_full {
   background: var(--cta-green);
+  border-radius: 0 0 99px 99px;
 }
 
 /* The 14 middle bars are two caps (top and bottom). Their free ends are fully rounded. */
@@ -50,7 +51,7 @@
 
 .cta_bar_cap::after {
   bottom: 0;
-  border-radius: 999px 999px 0 0;
+  border-radius: 999px ;
 }
 
 @media (min-width: 1280px) {

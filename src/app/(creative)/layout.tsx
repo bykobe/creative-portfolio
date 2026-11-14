@@ -10,6 +10,7 @@ import BackgroundMusic from "@/providers/background-music";
 import GlobalClickSound from "@/components/GlobalClickSound";
 import Preloader from "@/components/preloader/Preloader";
 import { bootState } from "@/providers/boot-state";
+import { WebglProvider } from "@/components/webgl-provider/webgl-provider";
 
 export default function CreativeLayout({
   children,
@@ -19,12 +20,13 @@ export default function CreativeLayout({
   return (
     <>
       {!bootState.visitedCorporate && <Preloader />}
-    {/*  <NoiseModule /> */}
+      {/*  <NoiseModule /> */}
+
       <BackgroundMusic>
         <GlobalClickSound />
         <SmoothScroll>
           <Header />
-          {children}
+          <WebglProvider>{children}</WebglProvider>
           <div data-landing-gate="" style={{ display: "contents" }}>
             <Footer />
           </div>
