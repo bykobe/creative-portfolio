@@ -1,7 +1,9 @@
-/* Projects: mobile first. Base rules are for phones; each media query adds to them.
-   Phones   < 700px    one column, tiles stacked, 4:3 images
-   Tablet   700px+     two columns
-   Desktop  1280px+    your original 12-col / 17-row grid                              */
+/* Projects: bento grid.
+   Phones   < 700px    one column, tiles stacked
+   Tablet+  700px+     the bento layout: wide column left, narrow column right, one full-width
+                       tile, then the "View all projects" band. Row heights are set in cqw
+                       (a share of the section's own width), so the whole layout scales as one
+                       piece instead of being tied to the screen height. */
 
 /* ---------- phones (base) ---------- */
 .projectsWrapper {
@@ -12,12 +14,14 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  container-type: inline-size; /* gives the rows below a width to size themselves from */
 }
 
 .projectItem {
-  display: flex;
-  flex-direction: column;
+  position: relative;
+  display: block;
   overflow: hidden;
+  min-width: 0;
 
   &:hover {
     color: var(--blue);
@@ -29,55 +33,43 @@
   width: 100%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  /* the dither's own backdrop colour, so nothing flashes while the shader starts up */
-  background-color: #5452ff;
+  filter: grayscale(100%);
 
-  img {
-    object-fit: cover;
-    object-position: center;
+  /* The same job next/image's `fill` does: whatever PixelMedia renders (its own wrapper, and the
+     canvas inside it) is pinned to all four edges of this box and stretched to its full size.
+     Targeting the children from here means PixelMedia doesn't need a className or style prop. */
+  & > * {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  & canvas,
+  & img,
+  & video {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover; /* only matters for the plain <img>/<video> fallback */
   }
 }
 
-/* The dithered layer sits underneath and always stays put. The photo fades in over it,
-   so there is no moment where neither is showing and no popping between two canvases. */
-.pi_dither {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.pi_photo {
-  opacity: 0;
-  object-fit: fill;
-  transition: opacity 0.7s cubic-bezier(0.76, 0, 0.24, 1);
-}
-
-.projectItem:hover .pi_photo,
-.projectItem:focus-within .pi_photo {
-  opacity: 1;
-}
-
-/* touch screens can't hover, so they just get the photo */
-@media (hover: none) {
-  .pi_photo {
-    opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pi_photo {
-    transition: none;
-  }
-}
-
+/* The caption sits on top of the photo, so the photo fills the whole tile with no gap under it.
+   (white + difference keeps it readable on light and dark photos) */
 .pi_cnt_wrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
   padding: var(--spacing-sm) 10px;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   gap: var(--spacing-sm);
-  border-bottom: 1px solid var(--grey);
+  color: #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
 }
 
 .pi_title {
@@ -101,24 +93,21 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  border-radius: 4200px;
-  background-color: var(--swart);
+  border-radius: 4200px; /* fully round ends */
+  background-color: var(--white);
   background-image: linear-gradient(var(--red), var(--red));
   background-repeat: no-repeat;
   background-position: bottom;
   background-size: 100% 0%;
   transition: background-size 0.45s cubic-bezier(0.76, 0, 0.24, 1), color 0.3s ease 0.1s;
   /* Drives both the span text and the dashed edge (via currentColor) */
-  color: var(--white);
+  color: var(--black);
+  font-weight: 700;
   --btn-edge-width: 12px;
 
   &:hover {
     background-size: 100% 101%;
     color: var(--white);
-  }
-
-  & span {
-    text-decoration: underline dotted 6px;
   }
 }
 
@@ -129,63 +118,42 @@
   }
   .projectsBtn:hover {
     background-size: 100% 0%;
+    color: var(--black);
   }
 }
 
-/* ---------- tablet: 700px and up ---------- */
+/* ---------- tablet and up: 700px and up ---------- */
 @media (min-width: 700px) {
   .projectsBody {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .pi_cnt_wrapper {
-    border-bottom: 0;
-    border-right: 1px solid var(--grey);
-  }
-
-  .projectsBtnWrapper {
-    grid-column: 1 / -1;
-    height: clamp(7rem, 16vw, 11rem);
-  }
-}
-
-/* ---------- desktop: 1280px and up (your original layout) ---------- */
-@media (min-width: 1280px) {
-  .projectsWrapper {
-    min-height: max-content;
-    height: calc(170vh + 10rem);
-  }
-
-  .projectsBody {
-    height: 100%;
-    grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: repeat(17, 1fr);
+    grid-template-columns: 1.7fr 1fr;            /* about 63% / 37% asymmetric balance */
+    grid-template-rows: 41.8cqw 47.8cqw 56.6cqw; /* rows 1 to 3; the button band is the last, auto row */
   }
 
   .projectItem {
-    display: grid;
-    grid-template-rows: repeat(7, 1fr);
+    height: 100%;
   }
 
   .pi_img_wrapper {
-    grid-row: 1 / span 6;
-    aspect-ratio: auto; /* the grid rows set the height here */
+    aspect-ratio: auto;
+    height: 100%; /* the photo fills the whole tile */
   }
 
-  .pi_cnt_wrapper {
-    grid-row: 7 / span 1;
-  }
-
-  /* Placement per tile */
-  .projectItem:nth-child(1) { grid-column: 1 / span 6; grid-row: 1 / span 7; }
-  .projectItem:nth-child(2) { grid-column: 7 / span 6; grid-row: 1 / span 7; }
-  .projectItem:nth-child(3) { grid-column: 1 / span 6; grid-row: 8 / span 7; }
-  .projectItem:nth-child(4) { grid-column: 7 / span 6; grid-row: 8 / span 7; }
+  /* Placement matching your exact reference layout */
+  .projectItem:nth-child(1) { grid-column: 1; grid-row: 1; }
+  .projectItem:nth-child(2) { grid-column: 2; grid-row: 1; }
+  .projectItem:nth-child(3) { grid-column: 1; grid-row: 2; }
+  .projectItem:nth-child(4) { grid-column: 2; grid-row: 2; }
+  .projectItem:nth-child(5) { grid-column: 1 / -1; grid-row: 3; }
 
   .projectsBtnWrapper {
-    grid-column: 1 / span 12;
-    grid-row: 15 / span 3;
-    height: 100%;
+    grid-column: 1 / -1;
+    grid-row: 4;
+    height: 23cqw;
+  }
+
+  .projectsBtn {
+    font-size: 10.7cqw; /* the big bold label in the design */
+    font-weight: 900;
   }
 }
