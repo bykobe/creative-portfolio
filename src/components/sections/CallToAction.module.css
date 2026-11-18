@@ -3,68 +3,31 @@
 .cta_wrapper {
     position: relative;
     width: 100%;
-  --cta-sky:  #dae8ff;
-  --cta-green: var(--green, #029902);
-  --cta-cap: 20.83%; /* height of the top and bottom caps on the middle bars */
+    position: relative;
+    padding: 0;
+    background-color: black ;
+    color: white;
+    container-type: size;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+  .cta_title {
+      font-family: var(--bricolage-font);
+      font-weight: 700;
+      line-height: 1;
+      font-size: var(--heading-1);
+      text-align: center;
+  }
+
 }
 
-.cta_bg {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-columns: repeat(35, 1fr); /* 18 bars + 17 gaps, all the same width */
-  background-color: var(--cta-sky);
-  pointer-events: none;
-}
-
-.cta_bar_full,
-.cta_bar_cap {
-  grid-row: 1;
-  height: 100%;
-}
-
-.cta_bar_full {
-  background: var(--cta-green);
-  border-radius: 0 0 99px 99px;
-}
-
-/* The 14 middle bars are two caps (top and bottom). Their free ends are fully rounded. */
-.cta_bar_cap {
-  position: relative;
-}
-
-.cta_bar_cap::before,
-.cta_bar_cap::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: var(--cta-cap);
-  background: var(--cta-green);
-}
-
-/* a huge radius is scaled down by the browser to exactly half the bar's width: a perfect round end */
-.cta_bar_cap::before {
-  top: 0;
-  border-radius: 0 0 999px 999px;
-}
-
-.cta_bar_cap::after {
-  bottom: 0;
-  border-radius: 999px ;
-}
 
 @media (min-width: 1280px) {
   .cta_wrapper {
-    height: calc(70vh + 15rem);
-    position: relative;
-    width: 100%;
-    padding: 0;
-    container-type: size;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+    height: calc(25vh + 10rem);
+
 
     .cta_link {
       position: relative;
@@ -103,8 +66,8 @@
   position: relative;
   width: 100%;
   height: clamp(420px, 80vh, 820px);
-  overflow: hidden;
-  background: var(--cta-sky-color, #dae8ff); /* same sky as the section above */
+overflow: hidden;
+  background: black; /* same sky as the section above */
   font-family: var(--bricolage-font, system-ui, sans-serif); /* the button text is drawn in this */
 }
 

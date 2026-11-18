@@ -13,9 +13,9 @@ export default function Projects() {
         {case_studies.slice(0, 5).map(({ img, title, alt }, idx) => (
           <article className={styles.projectItem} key={title}>
             <div className={styles.pi_img_wrapper}>
-              {/* PixelMedia has no `fill` prop, so the wrapper's CSS pins and stretches it instead */}
               <PixelMedia
                 type="image"
+                greyscale={true}
                 src={img}
                 alt={alt || title}
               />

@@ -31,18 +31,24 @@ const fragmentShader = /* glsl */ `
     uniform sampler2D uGrid;
     uniform float uStrength;
     uniform float uAberration;
+    uniform float uGrey; // 0 = full colour, 1 = fully greyscale
 
     void main() {
         vec2 offset = texture2D(uGrid, vUv).rg * uStrength;
         vec2 uv = vUv - offset;
         vec2 shift = offset * uAberration;
 
-        gl_FragColor = vec4(
+        vec3 color = vec3(
             texture2D(uMap, uv - shift).r,
             texture2D(uMap, uv).g,
-            texture2D(uMap, uv + shift).b,
-            1.0
+            texture2D(uMap, uv + shift).b
         );
+
+        // greyscale, blended in by uGrey so it can fade rather than snap
+        float luma = dot(color, vec3(0.2126, 0.7152, 0.0722));
+        color = mix(color, vec3(luma), uGrey);
+
+        gl_FragColor = vec4(color, 1.0);
     }
 `
 
@@ -52,6 +58,7 @@ const PixelMediaMat = shaderMaterial(
         uGrid: new Texture(),
         uStrength: 0.5,
         uAberration: 0.5,
+        uGrey: 0,
     },
     vertexShader,
     fragmentShader,
@@ -70,11 +77,15 @@ export type PixelEffectProps = {
     segments?: number
     webglEnabled?: boolean
     postProcessing?: boolean
+    /** Fade the image to greyscale while the cursor is over it. Off by default. */
+    greyscale?: boolean
+    className?: string
 }
 
 type PixelMediaMaterialProps = {
     map: Texture
     pointer: Pointer
+    greyscale: boolean
 } & Required<
     Pick<PixelEffectProps, "gridSize" | "interactionRadius" | "strength" | "aberration" | "trail">
 >
@@ -100,10 +111,12 @@ function PixelMediaMaterial({
     strength,
     aberration,
     trail,
+    greyscale,
 }: PixelMediaMaterialProps) {
     const ref = useRef<InstanceType<typeof PixelMediaMat>>(null)
     const previous = useMemo(() => new Vector2(0.5, 0.5), [])
     const wasHovering = useRef(false)
+    const grey = useRef(0) // current greyscale amount, eased toward its target every frame
 
     const grid = useMemo(() => {
         const data = new Float32Array(gridSize * gridSize * 4)
@@ -141,7 +154,12 @@ function PixelMediaMaterial({
             }
         }
 
+        // ease toward grey while hovered (or back to colour), independent of how pointer.hover behaves
+        const greyTarget = greyscale ? Math.min(1, pointer.hover) : 0
+        grey.current += (greyTarget - grey.current) * (1 - Math.exp(-delta * 10))
+
         grid.texture.needsUpdate = true
+        material.uGrey = grey.current
         material.uMap = map
         material.uGrid = grid.texture
         material.uStrength = strength
@@ -168,6 +186,7 @@ export function PixelMedia(props: PixelMediaProps) {
         trail = 0.93,
         segments = 1,
         webglEnabled = true,
+        greyscale = false,
         ...rest
     } = props
 
@@ -182,6 +201,7 @@ export function PixelMedia(props: PixelMediaProps) {
             strength={strength}
             aberration={aberration}
             trail={trail}
+            greyscale={greyscale}
         />
     )
 
