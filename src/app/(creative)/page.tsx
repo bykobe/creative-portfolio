@@ -10,6 +10,7 @@ import LandingGate, { LandingGateStyles } from "@/components/LandingGate";
 import HeroTransition from "@/components/HeroTransition";
 import ThreeCanvas from "@/components/ThreeCanvas";
 import Showreel from "@/components/sections/Showreel";
+import Playgroud from "@/components/sections/Playgroud";
 
 export default function Home() {
   return (
@@ -23,8 +24,11 @@ export default function Home() {
           <Showreel />
           <CaseStudies />
           <ImpressiveMoments />
+          {/*
           <Inspo />
+          */}
           <CallToAction />
+          <Playgroud />
         </LandingGate>
       </main>
     </div>

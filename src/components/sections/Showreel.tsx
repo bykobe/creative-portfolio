@@ -7,9 +7,9 @@ import styles from "./Showreel.module.css";
 export default function Showreel() {
 
   return (
-    <section className={styles.aboutWrapper}>
-      <div className={styles.aboutBody}>
-        <PixelMedia type="video" src={showreel} autoPlay muted loop controls={false} />
+    <section className={styles.showreelWrapper}>
+      <div className={styles.showreelBody}>
+        <PixelMedia type="video" greyscale={false} src={showreel} autoPlay muted loop controls={false} />
       </div>
     </section>
   );

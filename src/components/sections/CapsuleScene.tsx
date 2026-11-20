@@ -10,6 +10,7 @@
 
 import { useEffect, useRef } from "react";
 import styles from "./CallToAction.module.css";
+import ClipText from "../ui/ClipText";
 
 // ── Tweakables ──────────────────────────────────────────────────────────────────────────────
 // One button is made per entry. Add `href` to make it clickable.
@@ -18,9 +19,9 @@ const BUTTONS: { label: string; href?: string; icon?: "chat" | "mail" }[] = [
   { label: "", icon: "chat", href: "mailto:hi@bykobe.dev" },
   { label: "", icon: "mail", href: "mailto:hi@bykobe.dev" },
   { label: "Say hiii", href: "mailto:hi@bykobe.dev" },
-  { label: "Let’s chat", href: "mailto:hi@bykobe.dev" },
+  { label: "Let’s chat", href: "https://x.com/bykobe_" },
   { label: "Send a message", href: "mailto:hi@bykobe.dev" },
-  { label: "Reach out", href: "mailto:hi@bykobe.dev" },
+  { label: "Based in Accra" },
   { label: "Design Engineer" },
   { label: "Open to work" },
   { label: "Say hello", href: "mailto:hi@bykobe.dev" },
@@ -37,10 +38,10 @@ const ICON_STYLE = {
   chat: { bg: "#d29a4a", fg: "#ffffff" }, // leopard print, drawn in code
   mail: { bg: "#98dcdc", fg: "#161616" },
 };
-const FACE_MIN = 60; //          pill height range in px (scales with the box width in between)
-const FACE_MAX = 100;
+const FACE_MIN = 80; //          pill height range in px (scales with the box width in between)
+const FACE_MAX = 160;
 const SPAWN_EVERY_MS = 160; //   gap between each one dropping in
-const START_AT = "50%"; //       the box starts when its top edge reaches this much of the screen height
+const START_AT = "35%"; //       the box starts when its top edge reaches this much of the screen height
 
 type Btn = { w: number; h: number; bg: string; fg: string; label: string; fs: number; href?: string; icon?: "chat" | "mail" };
 
@@ -365,6 +366,11 @@ export default function CapsuleScene() {
 
   return (
     <div ref={wrapRef} className={styles.cta_dsn_wrapper}>
+      <div className={styles.cta_wrapper}>
+        <ClipText on="scroll"  delay={0.28} className={styles.cta_title}>
+          LET&apos;S WORK <br/>  TOGETHER
+        </ClipText>
+        </div>
       <canvas ref={canvasRef} className={styles.cta_dsn_canvas} aria-hidden="true" />
     </div>
   );

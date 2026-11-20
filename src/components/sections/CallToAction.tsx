@@ -6,13 +6,7 @@ import CapsuleScene from "./CapsuleScene";
 export default function CallToAction() {
   return (
     <>
-               <PixelScroll height="100vh" pixelSize={55} scrollDistance={40}/>
-      <div className={styles.cta_wrapper}>
-
-        <span className={styles.cta_title}>
-          LET&apos;S WORK <br/>  TOGETHER
-        </span>
-      </div>
+      <PixelScroll height="100vh" pixelSize={55} scrollDistance={40} className={styles.pixel_scroll} />
       <CapsuleScene />
       <div  className="bg-black h-5 w-full"/>
     </>

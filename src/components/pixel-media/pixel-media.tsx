@@ -186,7 +186,7 @@ export function PixelMedia(props: PixelMediaProps) {
         trail = 0.93,
         segments = 1,
         webglEnabled = true,
-        greyscale = false,
+        greyscale = true,
         ...rest
     } = props
 

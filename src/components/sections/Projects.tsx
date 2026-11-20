@@ -15,9 +15,9 @@ export default function Projects() {
             <div className={styles.pi_img_wrapper}>
               <PixelMedia
                 type="image"
-                greyscale={true}
                 src={img}
                 alt={alt || title}
+                greyscale={true}
               />
             </div>
             <div className={styles.pi_cnt_wrapper}>

@@ -31,7 +31,7 @@ export default function PageHandler() {
             }
             onClick={() => setActiveVersion("creative")}
           >
-            [CREATIVE VERSION]
+            CREATIVE VERSION
           </Link>
 
           <Link
@@ -43,7 +43,7 @@ export default function PageHandler() {
             }
             onClick={() => setActiveVersion("corporate")}
           >
-            [CORPORATE VERSION]
+            CORPORATE VERSION
           </Link>
         </div>
       </div>

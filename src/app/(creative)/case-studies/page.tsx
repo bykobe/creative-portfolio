@@ -1,9 +1,9 @@
 import styles from "./cs.module.css";
-import Image from "next/image";
 import ButtonLink from "@/components/ui/ButtonLink";
 import { case_studies } from "@/components/ui/assets";
 import CallToAction from "@/components/sections/CallToAction";
 import ClipText from "@/components/ui/ClipText";
+import { PixelMedia } from "@/components/pixel-media/pixel-media";
 
 export default function Projects() {
   return (
@@ -33,12 +33,11 @@ export default function Projects() {
             </div>
 
             <div className={styles.cs_item_img}>
-              <Image
+              <PixelMedia
+                type="image"
                 src={img}
                 alt={alt ?? title ?? "Case study preview"}
-                fill
                 sizes="(min-width: 1280px) 75vw, 100vw"
-                priority={idx === 0}
               />
             </div>
           </article>

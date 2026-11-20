@@ -8,6 +8,7 @@
     right: 10px;
     padding: 10px 15px;
     background-color: var(--swart);
+    color: white;
 
     .handler_container {
         height: 100%;
@@ -36,15 +37,25 @@
             }
 
             .active {
-                color: var(--green);
+                color: var(--color-green-800);
+                background-color: var(--white);
+                padding: 4px 8px;
             }
 
             .inactive {
                 color: var(--white);
+                background-color: var(--black);
+                 padding: 4px 8px;
+            }
+
+            .active:hover {
+                color: var(--white);
+                background-color: rgba(255, 255, 255, 0.4);
             }
 
             .inactive:hover {
-               color: var(--gray);
+               color: var(--color-green-800);
+               background-color: var(--color-lime-300);
             }
         }
     }
